@@ -1,0 +1,12 @@
+CHROMA_PATH = r"D:\ai-ecosystem\vectordb"
+
+COLLECTION_NAME = "knowledge_base"
+
+CHUNK_SIZE = 500
+
+CHUNK_OVERLAP = 100
+
+EMBEDDING_MODEL = "BAAI/bge-base-en-v1.5"
+RERANK_TOP_K = 10
+FINAL_CONTEXT_CHUNKS = 2
+MIN_RERANK_SCORE = 3

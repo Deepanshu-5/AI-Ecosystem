@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+
+vectordb/
+data/raw/
+data/processed/
+
+.env
+.env.*
+
+.vscode/
+*.json
+*.sqlite3
