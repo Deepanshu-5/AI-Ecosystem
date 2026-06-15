@@ -11,7 +11,6 @@ if root not in sys.path:
     sys.path.insert(0, root)
 
 from llm.rag import create_rag_prompt
-from llm.generator import PlaceholderGenerator
 from retrieval.retriever import retrieve
 
 
@@ -25,9 +24,9 @@ def main():
         question
     )
 
-    generator = PlaceholderGenerator()
-
-    answer = generator.generate(prompt)
+    answer = create_rag_prompt(
+    question
+)
 
     print("\n===== ANSWER =====\n")
 

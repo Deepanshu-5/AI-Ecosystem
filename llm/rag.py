@@ -2,16 +2,18 @@ from services.knowledge_service import search
 from services.context_formatter import format_context
 from llm.prompt_builder import build_prompt
 from services.context_compressor import compress_context
+from llm.generator_factory import GeneratorFactory
 
 def create_rag_prompt(
     question: str,
-    top_k: int = 10,
+    top_k: int =10,
     final_k: int = 2
 ):
 
    ranked = search(
     question,
-    top_k
+    top_k=top_k,
+    final_k=final_k
 )
 
    context = format_context(
@@ -26,5 +28,13 @@ def create_rag_prompt(
     question,
     compressed_context
 )
+   generator = GeneratorFactory.create(
+    "ollama"
+)
 
-   return prompt
+   answer = generator.generate(
+    prompt
+)
+
+   return answer
+
