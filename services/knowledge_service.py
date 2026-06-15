@@ -4,12 +4,13 @@ from services.cache_service import cache
 
 from config.settings import (
     FINAL_CONTEXT_CHUNKS,
-    MIN_RERANK_SCORE
+    MIN_RERANK_SCORE,
+    RERANK_TOP_K
 )
 
 def search(
     question: str,
-    top_k: int = 10,
+    top_k: int = RERANK_TOP_K,
     final_k: int = FINAL_CONTEXT_CHUNKS
 ):
     cached_result = cache.get(question)

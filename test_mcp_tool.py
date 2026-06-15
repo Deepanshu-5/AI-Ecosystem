@@ -1,6 +1,11 @@
-# test_cache.py
+# check_memory.py
 
-from services.knowledge_service import search
+import chromadb
 
-print(search("what is python"))
-print(search("what is python"))
+client = chromadb.PersistentClient(
+    path=r"D:\ai-ecosystem\vectordb"
+)
+
+print(
+    client.list_collections()
+)

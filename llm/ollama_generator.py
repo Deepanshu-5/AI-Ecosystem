@@ -20,7 +20,8 @@ class OllamaGenerator(
                     "role": "user",
                     "content": prompt
                 }
-            ]
+            ],
+            keep_alive="30m"
         )
 
         return response.message.content
