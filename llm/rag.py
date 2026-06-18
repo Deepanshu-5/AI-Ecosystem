@@ -1,4 +1,3 @@
-from typer import prompt
 
 from services.knowledge_service import search
 from services.context_formatter import format_context
@@ -34,23 +33,20 @@ def create_rag_prompt(
     memories
 )
 
-   context = f"""
-MEMORIES:
+   compressed_knowledge = compress_context(
+    knowledge_context
+)
 
-{memory_context}
-
-KNOWLEDGE:
-
-{knowledge_context}
-"""
-
-   compressed_context = compress_context(
-    context
+   compressed_memory = (
+    compress_context(memory_context)
+    if memory_context.strip()
+    else ""
 )
 
    prompt = build_prompt(
-    question,
-    compressed_context
+    question=question,
+    knowledge_context=compressed_knowledge,
+    memory_context=compressed_memory
 )
    generator = GeneratorFactory.create(
     "ollama"

@@ -21,21 +21,24 @@ def summarize_chat(
     prompt = f"""
 You are a memory compression system.
 
-Your task is to extract only the important long-term information.
+Create exactly ONE long-term memory.
 
 Rules:
 
-1. Remove greetings and casual discussion.
-2. Remove repeated information.
-3. Keep goals, decisions, preferences, project status, and important facts.
-4. Write a concise summary.
-5. Maximum 150 words.
+1. Keep only durable information.
+2. Remove repetition.
+3. Merge similar facts.
+4. Produce ONE paragraph only.
+5. Do not produce multiple summaries.
+6. Do not repeat the same idea in different wording.
+7. Maximum 60 words.
+8. Output only the final memory.
 
 Conversation:
 
 {chat_text}
 
-Summary:
+Memory:
 """
 
     return generator.generate(

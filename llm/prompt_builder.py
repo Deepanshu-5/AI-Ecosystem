@@ -1,24 +1,47 @@
 def build_prompt(
     question: str,
-    context: str
+    knowledge_context: str,
+    memory_context: str = "",
+    conversation_summary: str = "",
+    recent_messages: str = ""
 ):
 
     return f"""
 You are a retrieval assistant.
 
-Answer only from the supplied context.
+Use the provided information to answer.
 
-If the answer is not found in the context,
-say:
+If the information is insufficient, say so.
 
-"I could not find the answer in the provided context."
+====================
+CONVERSATION SUMMARY
+====================
 
-Context:
+{conversation_summary}
 
-{context}
+====================
+RECENT MESSAGES
+====================
 
-Question:
+{recent_messages}
+
+====================
+RELEVANT MEMORIES
+====================
+
+{memory_context}
+
+====================
+RELEVANT KNOWLEDGE
+====================
+
+{knowledge_context}
+
+====================
+QUESTION
+====================
+
 {question}
 
-Answer:
+ANSWER:
 """

@@ -60,12 +60,21 @@ def save_memory(
     content: str
 ):
 
+    embedding = (
+        get_embedding_model()
+        .encode(content)
+        .tolist()
+    )
+
     collection.add(
         ids=[
             str(uuid4())
         ],
         documents=[
             content
+        ],
+        embeddings=[
+            embedding
         ]
     )
 
@@ -77,29 +86,48 @@ def search_memory(
     top_k: int = 3
 ):
 
+    query_embedding = (
+    get_embedding_model()
+    .encode(query)
+    .tolist()
+)
+
     results = collection.query(
-    query_texts=[
-        query
+    query_embeddings=[
+        query_embedding
     ],
     n_results=top_k
 )
 
-    return results["documents"][0]
+    return {
+    "documents": results["documents"][0],
+    "distances": results["distances"][0]
+}
+def get_all_memories():
 
+    return collection.get()
 
-if __name__ == "__main__":
+def delete_memory(
+    memory_id: str
+):
 
-    save_memory(
-        "User integrated Claude Desktop MCP successfully."
+    collection.delete(
+        ids=[memory_id]
     )
 
-    memories = search_memory(
-        "Claude MCP"
+    return True
+
+def delete_memories(
+    ids: list[str]
+):
+
+    if not ids:
+        return False
+
+    collection.delete(
+        ids=ids
     )
 
-    print(
-        memories
-    )
-    print(
-    collection.count()
-)
+    return True
+
+  

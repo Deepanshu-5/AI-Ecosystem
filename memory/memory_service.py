@@ -18,13 +18,24 @@ def remember(
     content: str
 ):
 
-    existing = recall(
-    content,
-    top_k=5
-)
+    results = recall(
+        content,
+        top_k=5
+    )
 
-    if content not in existing:
-     save_memory(content)
+    distances = results["distances"]
+
+    if distances:
+
+        best_distance = min(distances)
+        print(f"[MEMORY] Closest Distance: {best_distance}")
+
+        if best_distance < 0.10:
+            return False
+
+    save_memory(content)
+
+    return True
 
 
 def recall(
@@ -39,12 +50,16 @@ def recall(
 if __name__ == "__main__":
 
     remember(
-        "PROJECT_GOAL: Build an AI ecosystem that reduces token usage through RAG, memory compression, MCP integration, vector databases, and local LLMs."
-    )
+    "User is building an AI ecosystem using MCP and ChromaDB."
+)
 
     remember(
-        "User integrated Claude Desktop MCP successfully."
-    )
+    "User is building an AI ecosystem using MCP and ChromaDB."
+)
+
+    remember(
+    "The project uses MCP, ChromaDB, and an AI ecosystem architecture."
+)
 
     print(
         recall(
