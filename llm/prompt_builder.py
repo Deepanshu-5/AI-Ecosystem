@@ -1,3 +1,20 @@
+def _section(
+    title: str,
+    content: str
+) -> str:
+
+    if not content.strip():
+        return ""
+
+    return f"""
+====================
+{title}
+====================
+
+{content}
+"""
+
+
 def build_prompt(
     question: str,
     knowledge_context: str,
@@ -6,37 +23,33 @@ def build_prompt(
     recent_messages: str = ""
 ):
 
+    conversation_block = _section(
+        "CONVERSATION SUMMARY",
+        conversation_summary
+    )
+
+    recent_block = _section(
+        "RECENT MESSAGES",
+        recent_messages
+    )
+
+    memory_block = _section(
+        "RELEVANT MEMORIES",
+        memory_context
+    )
+
+    knowledge_block = _section(
+        "RELEVANT KNOWLEDGE",
+        knowledge_context
+    )
+
     return f"""
 You are a retrieval assistant.
 
 Use the provided information to answer.
 
 If the information is insufficient, say so.
-
-====================
-CONVERSATION SUMMARY
-====================
-
-{conversation_summary}
-
-====================
-RECENT MESSAGES
-====================
-
-{recent_messages}
-
-====================
-RELEVANT MEMORIES
-====================
-
-{memory_context}
-
-====================
-RELEVANT KNOWLEDGE
-====================
-
-{knowledge_context}
-
+{conversation_block}{recent_block}{memory_block}{knowledge_block}
 ====================
 QUESTION
 ====================

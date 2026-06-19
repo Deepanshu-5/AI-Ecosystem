@@ -75,3 +75,20 @@ def session_exists(
     )
 
     return session_file.exists()
+if __name__ == "__main__":
+    save_summary(
+    "test_session",
+    "This is a test summary."
+)
+
+    print(
+    load_summary(
+        "test_session"
+    )
+)
+
+    print(
+    session_exists(
+        "test_session"
+    )
+)

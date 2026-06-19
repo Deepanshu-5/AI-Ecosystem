@@ -12,13 +12,11 @@ class RAGPipeline:
 
     def ask(
         self,
-        question: str
+        question: str,
+        session_id: str = ""
     ) -> str:
 
-        prompt = create_rag_prompt(
-            question
-        )
-
-        return self.generator.generate(
-            prompt
+        return create_rag_prompt(
+            question,
+            session_id=session_id
         )
