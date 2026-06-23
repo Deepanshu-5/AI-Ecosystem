@@ -8,9 +8,7 @@ root = str(
 if root not in sys.path:
     sys.path.insert(0, root)
 
-from memory.consolidation_service import (
-    store_consolidated_memory
-)
+from memory.consolidation_service import store_consolidated_memory
 
 
 def consolidate():
@@ -24,5 +22,3 @@ def consolidate():
     print(summary)
 
 
-if __name__ == "__main__":
-    consolidate()

@@ -32,35 +32,7 @@ def consolidate_memories(
     .replace("\n", " ")
     .strip()
 )
-    sentences = [
-    s.strip()
-    for s in consolidated_memory.split(".")
-    if s.strip()
-]
-
-    if sentences:
-     consolidated_memory = (
-        sentences[0] + "."
-    )
 
     return consolidated_memory
 
 
-if __name__ == "__main__":
-
-    memories = [
-        "User is building an AI ecosystem using MCP and ChromaDB.",
-        "The project uses RAG and memory compression.",
-        "The goal is reducing token usage.",
-        "Ollama and Qwen3 are used as the local LLM stack."
-    ]
-
-    result = consolidate_memories(
-        memories
-    )
-
-    print(
-        "\n===== CONSOLIDATED MEMORY =====\n"
-    )
-
-    print(result)

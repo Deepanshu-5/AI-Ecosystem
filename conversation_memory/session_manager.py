@@ -101,18 +101,3 @@ def pop_messages_for_summary(
         ]
 
     return to_summarize
-
-def estimated_chars(
-    session_id: str
-) -> int:
-
-    messages = get_recent_messages(
-        session_id
-    )
-
-    return sum(
-        len(
-            msg["content"]
-        )
-        for msg in messages
-    )

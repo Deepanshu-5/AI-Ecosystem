@@ -11,13 +11,17 @@ def retrieve_project_cluster():
     )
 
     filtered_documents = []
+    filtered_ids = []
 
     CONSOLIDATED_PHRASES = [
         "efficient resource management",
         "system interoperability"
     ]
 
-    for document in results["documents"]:
+    for memory_id, document in zip(
+    results["ids"],
+    results["documents"]
+):
 
         is_consolidated = False
 
@@ -34,7 +38,10 @@ def retrieve_project_cluster():
             filtered_documents.append(
                 document
             )
+            filtered_ids.append(
+                memory_id
+            )
 
-    return {
+    return { "ids": filtered_ids,
         "documents": filtered_documents
     }

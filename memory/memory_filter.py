@@ -10,7 +10,8 @@ def is_valid_memory(
     invalid_patterns = [
         "no conversation content",
         "summary: none",
-        "conversation content not provided"
+        "conversation content not provided",
+        "no_memory"
     ]
 
     lower_memory = memory.lower()

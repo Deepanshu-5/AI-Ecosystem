@@ -11,7 +11,7 @@ from memory.memory_manager import (
     process_conversation
 )
 
-MESSAGE_THRESHOLD = 10
+MESSAGE_THRESHOLD = 20
 
 
 class MemoryTrigger:

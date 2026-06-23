@@ -1,20 +1,5 @@
-import time
-from ollama import chat
+from llm.rag import create_rag_prompt
 
-start = time.perf_counter()
-
-response = chat(
-    model="qwen3:4b",
-    messages=[
-        {
-            "role":"user",
-            "content":"Say hello."
-        }
-    ]
-)
-
-print(response.message.content)
-
-print(
-    time.perf_counter() - start
+create_rag_prompt(
+    "Difference between Python 2 and Python 3?"
 )

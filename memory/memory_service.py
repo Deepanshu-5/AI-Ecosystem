@@ -18,10 +18,10 @@ def remember(
     content: str
 ):
 
-    results = recall(
-        content,
-        top_k=5
-    )
+    results = recall_with_scores(
+    content,
+    top_k=5
+)
 
     distances = results["distances"]
 
@@ -30,7 +30,7 @@ def remember(
         best_distance = min(distances)
         print(f"[MEMORY] Closest Distance: {best_distance}")
 
-        if best_distance < 0.10:
+        if best_distance < 0.25:
             return False
 
     save_memory(content)
@@ -38,32 +38,15 @@ def remember(
     return True
 
 
-def recall(
-    query: str,
-    top_k: int = 3
-):
+def recall_with_scores(query, top_k=3):
+    return search_memory(query, top_k)
 
-    return search_memory(
-        query,
-        top_k
-    )
-if __name__ == "__main__":
+def recall(query, top_k=3):
+    results = search_memory(query, top_k)
 
-    remember(
-    "User is building an AI ecosystem using MCP and ChromaDB."
-)
+    documents = results.get("documents", [])
 
-    remember(
-    "User is building an AI ecosystem using MCP and ChromaDB."
-)
+    if documents and isinstance(documents[0], list):
+        return documents[0]
 
-    remember(
-    "The project uses MCP, ChromaDB, and an AI ecosystem architecture."
-)
-
-    print(
-        recall(
-            "project goal",
-            top_k=10
-        )
-    )
+    return documents

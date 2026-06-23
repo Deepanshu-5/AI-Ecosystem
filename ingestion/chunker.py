@@ -1,17 +1,23 @@
-import re
+def create_chunks(
+    text: str,
+    chunk_size: int = 500,
+    overlap: int = 100
+) -> list[str]:
 
+    chunks = []
 
-def create_chunks(text: str) -> list[str]:
+    start = 0
 
-    pattern = r"(Q\d+.*?)(?=Q\d+|$)"
+    while start < len(text):
 
-    chunks = re.findall(
-        pattern,
-        text,
-        flags=re.DOTALL
-    )
+        end = start + chunk_size
 
-    return [
-        chunk.strip()
-        for chunk in chunks
-    ]
+        chunks.append(
+            text[start:end]
+        )
+
+        start += (
+            chunk_size - overlap
+        )
+
+    return chunks

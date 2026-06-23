@@ -9,6 +9,10 @@ from config.settings import (
 model = None
 client = None
 collection = None
+from shared.model_registry import (
+    get_embedding_model
+)
+
 
 
 from dataclasses import dataclass, field
@@ -23,7 +27,7 @@ class Document:
 def get_model():
     global model
     if model is None:
-        model = SentenceTransformer(EMBEDDING_MODEL)
+        model = get_embedding_model( EMBEDDING_MODEL)
     return model
 
 

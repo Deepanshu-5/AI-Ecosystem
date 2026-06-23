@@ -43,10 +43,24 @@ def create_rag_prompt(
         ranked
     )
 
+    import time
+
+    start = time.time()
+
+#     memories = recall(
+#     question,
+#     top_k=top_k
+# )  
     memories = recall(
-        question,
-        top_k=top_k
-    )
+    question,
+    top_k=1
+)
+
+    print(
+    "[MEMORY RETRIEVAL]",
+    round(time.time() - start, 3),
+    "sec"
+)
 
     memory_context = "\n".join(
         memories
@@ -73,10 +87,22 @@ def create_rag_prompt(
     generator = GeneratorFactory.create(
         "ollama"
     )
+    import os
+    if os.getenv("RAG_DEBUG"):
+     print("\n===== FINAL PROMPT =====\n")
+     print(prompt)
+    
+    from shared.token_counter import (
+    count_tokens
+)
 
-    print("\n===== FINAL PROMPT =====\n")
-    print(prompt)
+    token_count = count_tokens(
+    prompt
+)
 
+    print(
+    f"[TOKEN ESTIMATE] {token_count}"
+)
     answer = generator.generate(
         prompt
     )

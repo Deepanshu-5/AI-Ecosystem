@@ -15,6 +15,7 @@ from llm.ollama_generator import (
 from conversation_memory.metrics import (
     summary_metrics
 )
+from config.settings import SUMMARY_MODEL
 
 def _format_messages(
     messages: list[dict]
@@ -63,7 +64,7 @@ def _summarize_messages(
     messages: list[dict]
 ) -> str:
 
-    generator = OllamaGenerator()
+    generator = OllamaGenerator(SUMMARY_MODEL)
     chat_text = _format_messages(
         messages
     )
@@ -121,7 +122,7 @@ def _merge_summary(
     messages: list[dict]
 ) -> str:
 
-    generator = OllamaGenerator()
+    generator = OllamaGenerator(SUMMARY_MODEL)
     chat_text = _format_messages(
         messages
     )
@@ -182,39 +183,3 @@ Updated summary:
     
 
 
-if __name__ == "__main__":
-
-    existing = (
-        "User is designing a conversation memory system "
-        "to reduce token usage in chat sessions."
-    )
-
-    new_messages = [
-        {
-            "role": "user",
-            "content": (
-                "We decided on session-specific summaries, "
-                "not mixing sessions."
-            )
-        },
-        {
-            "role": "assistant",
-            "content": (
-                "Next step is session_summarizer.py with "
-                "incremental rolling summaries."
-            )
-        }
-    ]
-
-    summary = summarize_session(
-        existing,
-        new_messages
-    )
-
-    print(
-        "\nSESSION SUMMARY:\n"
-    )
-
-    print(
-        summary
-    )

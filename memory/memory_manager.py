@@ -26,6 +26,12 @@ def process_conversation(chat_text: str):
     summary = summarize_chat(chat_text)
     summary_time = time.time()
 
+    if summary.strip() == "NO_MEMORY":
+      print(
+        "[MEMORY] No durable memory found."
+    )
+      return None
+
     print(
     f"[TIME] Summarization: {summary_time - start:.2f}s"
 )
@@ -62,26 +68,3 @@ def process_conversation(chat_text: str):
     f"[TIME] Consolidation: {consolidation_end - consolidation_start:.2f}s"
 )
     return summary
-
-if __name__ == "__main__":
-
-    conversation = """
-User is building an AI ecosystem.
-
-Uses:
-- ChromaDB
-- MCP
-- Claude Desktop
-- Ollama
-
-Goal:
-Reduce token usage using RAG and memory compression.
-"""
-
-    summary = process_conversation(
-        conversation
-    )
-
-    print(
-        summary
-    )

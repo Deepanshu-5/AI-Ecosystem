@@ -55,6 +55,12 @@ QUESTION
 ====================
 
 {question}
+Rules:
+
+- Answer in one sentence.
+- Maximum 20 words.
+- Do not explain your reasoning.
+- Do not show analysis.
 
 ANSWER:
 """

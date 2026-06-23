@@ -108,12 +108,6 @@ def get_session_context(
         )
     }
 
-summary_metrics = {
-    "messages_processed": 0,
-    "summaries_created": 0,
-    "summary_seconds": []
-}
-
 
 def get_metrics():
 
@@ -174,13 +168,10 @@ if __name__ == "__main__":
     print(
         context["recent_messages"]
     )
-from conversation_memory.metrics import (
-    get_metrics
-)
-print(
+    print(
     "\nMETRICS:\n"
 )
 
-print(
+    print(
     get_metrics()
 )

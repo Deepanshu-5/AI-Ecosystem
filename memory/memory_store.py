@@ -29,16 +29,20 @@ client = chromadb.PersistentClient(
 )
 
 try:
-
     collection = client.get_collection(
         MEMORY_COLLECTION
     )
 
-except:
+except Exception:
 
     collection = client.create_collection(
         MEMORY_COLLECTION
     )
+    
+from shared.model_registry import (
+    get_embedding_model as get_shared_embedding_model
+)
+
 
 
 def get_embedding_model():
@@ -47,10 +51,8 @@ def get_embedding_model():
 
     if embedding_model is None:
 
-        embedding_model = (
-            SentenceTransformer(
-                EMBEDDING_MODEL
-            )
+        embedding_model = get_shared_embedding_model(
+            EMBEDDING_MODEL
         )
 
     return embedding_model
@@ -93,13 +95,12 @@ def search_memory(
 )
 
     results = collection.query(
-    query_embeddings=[
-        query_embedding
-    ],
+    query_embeddings=[query_embedding],
     n_results=top_k
 )
 
     return {
+    "ids": results["ids"][0],
     "documents": results["documents"][0],
     "distances": results["distances"][0]
 }
