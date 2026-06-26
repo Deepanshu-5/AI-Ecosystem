@@ -13,5 +13,4 @@ def get_embedding_model(
         _embedding_model = SentenceTransformer(
             model_name
         )
-
     return _embedding_model

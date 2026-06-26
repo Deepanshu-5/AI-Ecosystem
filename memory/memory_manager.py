@@ -27,9 +27,6 @@ def process_conversation(chat_text: str):
     summary_time = time.time()
 
     if summary.strip() == "NO_MEMORY":
-      print(
-        "[MEMORY] No durable memory found."
-    )
       return None
 
     print(

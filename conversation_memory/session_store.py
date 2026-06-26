@@ -2,11 +2,24 @@ from pathlib import Path
 import json
 
 
-CONVERSATION_DIR = Path("data/conversations")
+from pathlib import Path
+
+ROOT = Path(
+    __file__
+).resolve().parent.parent
+
+CONVERSATION_DIR = (
+    ROOT
+    / "data"
+    / "conversations"
+)
+
 CONVERSATION_DIR.mkdir(
     parents=True,
     exist_ok=True
 )
+
+
 
 
 def _get_session_path(

@@ -56,37 +56,40 @@ def process_message(
     role: str,
     content: str
 ) -> None:
-  
+
     append_message(
-        session_id,
-        role,
-        content
-    )
+    session_id,
+    role,
+    content
+)
+
     summary_metrics[
     "messages_processed"
 ] += 1
 
-    if not should_summarize(session_id):
-         return
+    if not should_summarize(
+    session_id
+):
+     return
 
     existing = load_summary(
-        session_id
-    )
+    session_id
+)
 
     to_summarize = pop_messages_for_summary(
-        session_id,
-        keep_last=RECENT_KEEP
-    )
+    session_id,
+    keep_last=RECENT_KEEP
+)
 
     new_summary = summarize_session(
-        existing,
-        to_summarize
-    )
+    existing,
+    to_summarize
+)
 
     save_summary(
-        session_id,
-        new_summary
-    )
+    session_id,
+    new_summary
+)
 
 
 def get_session_context(

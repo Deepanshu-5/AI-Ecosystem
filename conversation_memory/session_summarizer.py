@@ -109,10 +109,6 @@ Summary:
     "summary_seconds"
 ].append(elapsed)
 
-    print(
-    f"[SESSION_SUMMARY] "
-    f"{elapsed:.2f}s"
-)
 
     return summary
 
@@ -174,10 +170,6 @@ Updated summary:
     elapsed
 )
 
-    print(
-    f"[SESSION_SUMMARY] "
-    f"{elapsed:.2f}s"
-)
 
     return summary
     

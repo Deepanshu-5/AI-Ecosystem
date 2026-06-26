@@ -28,7 +28,11 @@ def remember(
     if distances:
 
         best_distance = min(distances)
-        print(f"[MEMORY] Closest Distance: {best_distance}")
+
+        print(
+    f"[MEMORY] Closest Distance: {best_distance}",
+    file=sys.stderr
+)
 
         if best_distance < 0.25:
             return False

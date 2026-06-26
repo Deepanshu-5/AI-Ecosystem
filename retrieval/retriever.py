@@ -28,6 +28,7 @@ def get_model():
     global model
     if model is None:
         model = get_embedding_model( EMBEDDING_MODEL)
+        print("[EMBEDDING MODEL LOADED]")
     return model
 
 

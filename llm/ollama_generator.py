@@ -30,7 +30,6 @@ class OllamaGenerator(
         prompt: str
     ) -> str:
 
-        print("CALLING OLLAMA")
 
         print(
             f"[MODEL] {self.model_name}"
@@ -63,7 +62,6 @@ class OllamaGenerator(
     f"[OLLAMA CALL] {elapsed:.2f}s"
 )
 
-        print("OLLAMA RETURNED")
 
         content = response.message.content
 

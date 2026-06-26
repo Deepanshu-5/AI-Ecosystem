@@ -32,19 +32,24 @@ def main():
 
         from llm.rag import create_rag_prompt
 
-        question = input(
-            "\nQuestion: "
-        )
+        while True:
 
-        answer = create_rag_prompt(
-            question
-        )
+         question = input(
+        "\nQuestion: "
+    )
 
-        print(
-            "\n===== ANSWER =====\n"
-        )
+         if question.lower() == "exit":
+               break
 
-        print(answer)
+         answer = create_rag_prompt(
+        question
+    )
+
+         print(
+        "\n===== ANSWER =====\n"
+    )
+
+         print(answer)
 
     elif command == "consolidate":
 

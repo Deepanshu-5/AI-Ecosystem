@@ -9,7 +9,7 @@ def get_model():
         model = CrossEncoder(
             "cross-encoder/ms-marco-MiniLM-L-6-v2"
         )
-
+        print("[RERANKER MODEL LOADED]")
     return model
 
 def rerank(question, documents):

@@ -9,7 +9,7 @@ if _SETTINGS_PATH.exists():
         _user_settings = json.load(f)
 
 CHROMA_PATH = _user_settings.get("chroma_path", r"D:\ai-ecosystem\vectordb")
-COLLECTION_NAME = _user_settings.get("collection_name", "knowledge_base")
+COLLECTION_NAME = _user_settings.get("collection_name", "python_docs")
 MEMORY_COLLECTION = _user_settings.get("memory_collection", "memory_base")
 CHUNK_SIZE = _user_settings.get("chunk_size", 500)
 CHUNK_OVERLAP = _user_settings.get("chunk_overlap", 100)
@@ -19,7 +19,7 @@ FINAL_CONTEXT_CHUNKS = _user_settings.get("final_context_chunks", 2)
 MIN_RERANK_SCORE = _user_settings.get("min_rerank_score", 3)
 CHAT_MODEL = _user_settings.get(
     "chat_model",
-    "qwen2.5:1.5b"
+    "qwen3:4b"
 )
 
 SUMMARY_MODEL = _user_settings.get(
@@ -28,3 +28,16 @@ SUMMARY_MODEL = _user_settings.get(
 )
 SUMMARY_THRESHOLD = _user_settings.get("summary_threshold", 100)
 RECENT_KEEP = _user_settings.get("recent_keep", 5)
+
+# Context Budgeting Layer settings
+CONTEXT_BUDGET_TOTAL = _user_settings.get("context_budget_total", 2048)
+CONTEXT_BUDGET_OVERHEAD = _user_settings.get("context_budget_overhead", 60)
+_CONTEXT_CATEGORY_CAPS = _user_settings.get("context_category_caps", None)
+if _CONTEXT_CATEGORY_CAPS is None:
+    CONTEXT_CATEGORY_CAPS = {
+        "knowledge": 0.60,
+        "memory": 0.25,
+        "session": 0.15,
+    }
+else:
+    CONTEXT_CATEGORY_CAPS = _CONTEXT_CATEGORY_CAPS

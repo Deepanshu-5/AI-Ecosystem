@@ -27,7 +27,6 @@ embedding_model = None
 client = chromadb.PersistentClient(
     path=CHROMA_PATH
 )
-
 try:
     collection = client.get_collection(
         MEMORY_COLLECTION

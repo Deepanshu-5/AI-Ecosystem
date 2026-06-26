@@ -1,5 +1,7 @@
-from llm.rag import create_rag_prompt
+from conversation_memory.session_memory import process_message
 
-create_rag_prompt(
-    "Difference between Python 2 and Python 3?"
+process_message(
+    "test",
+    "assistant",
+    "We use ChromaDB."
 )
