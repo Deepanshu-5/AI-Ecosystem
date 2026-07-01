@@ -343,7 +343,9 @@ After reading this document and the canonical engineering documents, a contribut
 - Continue development without introducing architectural drift.
 - Produce production-quality implementations consistent with the existing system.
 
-This document is the official onboarding entry point for the AI Ecosystem.                             # Bootstrap Instructions       After reading this document:
+This document is the official onboarding entry point for the AI Ecosystem.                             
+# Bootstrap Instructions      
+ After reading this document:
 
 1. Read all canonical engineering documents.
 2. Do not summarize them.
