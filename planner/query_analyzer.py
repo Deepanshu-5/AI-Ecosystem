@@ -92,6 +92,8 @@ _MEDIUM_COMPLEXITY_KEYWORDS = frozenset({
     "analyze",
 })
 
+
+
 class QueryAnalyzer:
     """
     Deterministic analyzer responsible for transforming a raw user query
@@ -245,7 +247,7 @@ class QueryAnalyzer:
 
     @staticmethod
     def _estimate_complexity(query: str) -> Complexity: 
-     """
+        """
     Estimate the execution complexity for a normalized query.
 
     Parameters:
@@ -259,16 +261,16 @@ class QueryAnalyzer:
 
     Side Effects:
         None.
-    """
-     lowered = query.lower()
+        """
+        lowered = query.lower()
 
-     if any(keyword in lowered for keyword in _HIGH_COMPLEXITY_KEYWORDS):
-        return Complexity.HIGH
+        if any(keyword in lowered for keyword in _HIGH_COMPLEXITY_KEYWORDS):
+          return Complexity.HIGH
 
-     if any(keyword in lowered for keyword in _MEDIUM_COMPLEXITY_KEYWORDS):
-        return Complexity.MEDIUM
+        if any(keyword in lowered for keyword in _MEDIUM_COMPLEXITY_KEYWORDS):
+          return Complexity.MEDIUM
 
-     return Complexity.LOW
+        return Complexity.LOW
 
     @staticmethod
     def _determine_resource_requirements(

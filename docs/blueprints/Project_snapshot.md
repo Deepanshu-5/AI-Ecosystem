@@ -28,15 +28,16 @@ Implementation continues according to the established architecture.
 
 Current Engineering Focus
 
-Planner implementation.
+Planner integration.
 
-The Planner represents the next major architectural milestone and the foundation of the intelligent control plane.
+The Planner core has been completed, validated, and frozen for Production V1.
+Current engineering effort is focused on integrating the Planner with the retrieval pipeline.
 
 ---
 
 Overall Progress
 
-Approximately 70%.
+Approximately 78%.
 
 The project has transitioned from infrastructure construction to intelligent orchestration.
 
@@ -145,27 +146,30 @@ Planner
 
 Status
 
-In Development
+Production Ready
 
 Progress
 
-≈10%
+100%
 
-Current objective
+Capabilities
 
-Implement deterministic planning.
+- Query Normalization
+- Deterministic Query Analysis
+- ProcessingGoal Classification
+- Complexity Estimation
+- Resource Requirement Determination
+- Decision Trace Generation
+- PlanningContext
+- ExecutionPlan
+- PlannerBuilder
+- PlannerValidator
+- Comprehensive Unit Testing
+- End-to-End Pipeline Validation
 
-Current focus
+Next Work
 
-ExecutionPlan.
-
-ProcessingGoal.
-
-DecisionTrace.
-
-Planner Builder.
-
-Planner Validator.
+Integrate the Planner with the Retrieval Pipeline.
 
 ---
 
@@ -241,11 +245,11 @@ Emerging
 
 Progress
 
-≈20%
+≈35%
 
 Current focus
 
-Planner.
+Planner integration with downstream components..
 
 Future focus
 
@@ -301,27 +305,19 @@ Engineering priorities should continue to follow measured bottlenecks rather tha
 
 Priority 1
 
-Complete Planner implementation.
-
----
+Integrate Planner with Knowledge, Memory, and Session retrieval.
 
 Priority 2
 
-Integrate Planner with existing infrastructure.
-
----
+Implement Retrieval Orchestration.
 
 Priority 3
 
 Implement Model Routing.
 
----
-
 Priority 4
 
 Implement Tool Routing.
-
----
 
 Priority 5
 
@@ -354,16 +350,15 @@ These items are intentionally postponed to preserve focus on Production V1.
 
 Current Sprint
 
-Planner Core
+Planner Integration
 
 Primary Deliverables
 
-- ExecutionPlan
-- Planner Builder
-- Planner Validator
-- DecisionTrace
-- ProcessingGoal
-- ResourceRequirements
+- Planner integration
+- Retrieval orchestration
+- End-to-end planner pipeline
+- Retrieval contracts
+- Integration testing
 
 Success Criteria
 
@@ -377,27 +372,23 @@ Production-quality implementation.
 
 9.7 Next Architectural Milestones
 
-1. Planner Core
+1. Retrieval Integration
 
 ↓
 
-2. Planner Integration
+2. Model Routing
 
 ↓
 
-3. Model Routing
+3. Tool Routing
 
 ↓
 
-4. Tool Routing
+4. Control Plane Completion
 
 ↓
 
-5. Control Plane Completion
-
-↓
-
-6. Production V1
+5. Production V1
 
 ---
 
@@ -409,9 +400,9 @@ No critical architectural risks identified.
 
 Current implementation risks
 
-- Planner complexity.
-- Maintaining deterministic behaviour.
-- Preventing architectural drift during implementation.
+- Retrieval integration correctness.
+- Maintaining deterministic planner behaviour.
+- Preventing coupling between Planner and infrastructure.
 
 Mitigation
 

@@ -128,7 +128,7 @@ Current Project Status
 
 Overall Progress
 
-Approximately 70%.
+Approximately 78%.
 
 Current Phase
 
@@ -136,25 +136,20 @@ Production V1.
 
 Current Focus
 
-Planner implementation.
+Planner Integration and Retrieval Architecture.
 
 Current Highest Priority
 
-Deterministic planning.
+Integrate the completed Planner with the Retrieval Layer.
 
 Current Major Milestone
 
-ExecutionPlan.
+Production-ready deterministic Planner completed.
 
-Planner Builder.
+Next milestone:
 
-Planner Validator.
+ExecutionPlan-driven Retrieval Pipeline.
 
-DecisionTrace.
-
-ProcessingGoal.
-
-ResourceRequirements.
 
 ---
 
@@ -175,9 +170,14 @@ Architecture Complete
 - Model Routing
 - Tool Routing
 
+Production Ready
+
+- Planner
+
 Implementation In Progress
 
-Planner.
+- Retrieval Layer
+- Planner Integration
 
 Deferred
 
@@ -300,19 +300,49 @@ Do not optimize retrieval without new measurements.
 
 Current Sprint
 
-Planner Core.
+Planner Integration.
 
 Current Deliverables
 
-- ExecutionPlan
-- Planner Builder
-- Planner Validator
-- DecisionTrace
+- Retrieval Architecture
+- Retrieval Pipeline
+- Planner Integration
+- RetrievedContext
+- Retrieval Builder
+- Retrieval Validator
+
+The Planner has reached Production V1 and is considered architecturally frozen. Future work is limited to bug fixes and backward-compatible improvements.
+
+---
+---
+
+Planner Status
+
+The Planner subsystem has been completed and validated.
+
+Completed Components
+
+- QueryAnalyzer
+- PlanningContext
 - ProcessingGoal
+- Complexity
 - ResourceRequirements
+- DecisionTrace
+- ExecutionPlan
+- PlannerBuilder
+- PlannerValidator
 
-No additional architectural work should begin until the Planner reaches Production V1.
+Verification
 
+- Unit tested
+- Component tested
+- Pipeline tested
+
+Current Status
+
+Production Ready (V1)
+
+The Planner is now the stable entry point of the AI Ecosystem Control Plane.
 ---
 
 AI Collaboration Instructions
@@ -327,6 +357,7 @@ If you are an AI assistant contributing to this project:
 6. Follow the Engineering Constitution and Implementation Specification.
 7. Maintain consistency with existing terminology and domain concepts.
 8. Optimize for long-term maintainability rather than short-term convenience.
+9. Before implementing any new subsystem, review the corresponding architecture document (e.g., PLANNER.md, RETRIEVER.md). Treat these subsystem documents as the implementation reference after the canonical engineering documents.
 
 Your role is to preserve and extend the architecture—not to redesign it.
 
@@ -342,6 +373,12 @@ After reading this document and the canonical engineering documents, a contribut
 - Follow the established engineering process.
 - Continue development without introducing architectural drift.
 - Produce production-quality implementations consistent with the existing system.
+
+A contributor should also be able to:
+
+- Understand the completed Planner subsystem.
+- Continue development from the Retrieval Layer without redesigning the Planner.
+- Use the ExecutionPlan as the control contract for downstream components.
 
 This document is the official onboarding entry point for the AI Ecosystem.                             
 # Bootstrap Instructions      
