@@ -36,7 +36,6 @@ class TestRetrievedContext:
             memory_latency_ms=5,
             session_latency_ms=3,
             total_latency_ms=18,
-            schema_version=1,
         )
 
         ctx = RetrievedContext(
@@ -65,7 +64,7 @@ class TestRetrievedContext:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
+                
             ),
         )
         assert ctx.version == CURRENT_SCHEMA_VERSION
@@ -83,7 +82,6 @@ class TestRetrievedContext:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
             ),
         )
         with pytest.raises(AttributeError):
@@ -102,7 +100,6 @@ class TestRetrievedContext:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
             ),
         )
         d = ctx.to_dict()

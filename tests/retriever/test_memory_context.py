@@ -40,11 +40,11 @@ class TestMemoryContext:
         assert ctx.metadata == {"key": "value"}
 
     def test_empty_context(self) -> None:
-        ctx = MemoryContext(entries=(), metadata={})
+        ctx = MemoryContext.empty()
         assert len(ctx.entries) == 0
 
     def test_immutability(self) -> None:
-        ctx = MemoryContext(entries=(), metadata={})
+        ctx = MemoryContext.empty()
         with pytest.raises(AttributeError):
             ctx.entries = ()  # type: ignore[misc]
 

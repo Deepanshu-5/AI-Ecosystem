@@ -448,18 +448,61 @@ All new functionality should be implemented in downstream components without mod
 Next Milestone
 
 Version 0.3.0
+Release Date
 
-Retriever Architecture
+2026-07-02
 
-Objective
+Retriever Subsystem
 
-Implement the Retrieval subsystem capable of consuming the ExecutionPlan and retrieving Knowledge, Memory, and Session context for downstream Context Budgeting.
+Summary
+Completed the deterministic Retrieval subsystem.
 
----
+Major Deliverables
+-KnowledgeRetriever
+-MemoryRetriever
+-RetrievalBuilder
+-SessionRetriever
+-RetrievalValidator
+-RetrievedContext
+-KnowledgeContext
+-MemoryContext
+-SessionContext
+-RetrievalMetadata
+-Unit Tests
+-Component Tests
+-Pipeline Tests
+
+Validation
+
+Architecture Review
+-PASS
+Implementation Review
+-PASS
+Integration Review
+-PASS
+Testing
+-PASS
 
 Status
+Completed
 
-Active Development
+Sprint
+Retriever Subsystem
+
+Affected Layer
+
+Retriever
+Control Plane
+
+Architecture Changed?
+
+Yes.
+
+The Retrieval subsystem has been introduced as the deterministic execution layer between the Planner and Context Budgeting.
+
+Next Milestone
+Context Budgeter Integration
+---
 
 ---
 

@@ -39,16 +39,12 @@ class TestSessionContext:
         assert ctx.metadata == {"key": "value"}
 
     def test_empty_context(self) -> None:
-        ctx = SessionContext(
-            summary="",
-            recent_messages=(),
-            metadata={},
-        )
+        ctx = SessionContext.empty()
         assert ctx.summary == ""
         assert len(ctx.recent_messages) == 0
 
     def test_immutability(self) -> None:
-        ctx = SessionContext(summary="", recent_messages=(), metadata={})
+        ctx = SessionContext.empty()
         with pytest.raises(AttributeError):
             ctx.summary = "Modified"  # type: ignore[misc]
 

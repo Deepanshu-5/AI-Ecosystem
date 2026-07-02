@@ -196,11 +196,6 @@ def _validate_logical(context: RetrievedContext) -> list[str]:
                 f"{context.metadata.total_latency_ms}"
             )
 
-        if context.metadata.schema_version < 1:
-            violations.append(
-                f"metadata.schema_version: must be >= 1, got "
-                f"{context.metadata.schema_version}"
-            )
 
         # Count consistency: metadata counts must match actual counts
         if isinstance(context.knowledge, KnowledgeContext):

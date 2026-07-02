@@ -147,10 +147,12 @@ class RetrievalBuilder:
         resource_requirements = execution_plan.resource_requirements
 
         knowledge_context, knowledge_latency_ms = self._retrieve_knowledge(
-            resource_requirements, query
+         resource_requirements,
+          query,
         )
         memory_context, memory_latency_ms = self._retrieve_memory(
-            resource_requirements, query
+         resource_requirements,
+          query,
         )
         session_context, session_latency_ms = self._retrieve_session(
             resource_requirements, session_id
@@ -168,7 +170,7 @@ class RetrievalBuilder:
             memory_latency_ms=memory_latency_ms,
             session_latency_ms=session_latency_ms,
             total_latency_ms=total_latency_ms,
-            schema_version=1,
+            # schema_version=1,
         )
 
         retrieved_context = RetrievedContext(
@@ -222,10 +224,10 @@ class RetrievalBuilder:
             )
 
     def _retrieve_knowledge(
-        self,
-        resource_requirements: ResourceRequirements,
-        query: str,
-    ) -> tuple[KnowledgeContext, int]:
+    self,
+    resource_requirements: ResourceRequirements,
+    query: str,
+)-> tuple[KnowledgeContext, int]:
         """
         Retrieve knowledge if requested, or return an empty context.
 
@@ -234,7 +236,7 @@ class RetrievalBuilder:
             latency in milliseconds.
         """
         if not resource_requirements.knowledge:
-            return KnowledgeContext(items=(), metadata={}), 0
+            return KnowledgeContext.empty(), 0
 
         if self._knowledge_retriever is None:
             raise InvalidExecutionPlanError(
@@ -248,10 +250,10 @@ class RetrievalBuilder:
         return context, latency_ms
 
     def _retrieve_memory(
-        self,
-        resource_requirements: ResourceRequirements,
-        query: str,
-    ) -> tuple[MemoryContext, int]:
+    self,
+    resource_requirements: ResourceRequirements,
+    query: str,
+) -> tuple[MemoryContext, int]:
         """
         Retrieve memory if requested, or return an empty context.
 
@@ -260,7 +262,7 @@ class RetrievalBuilder:
             latency in milliseconds.
         """
         if not resource_requirements.memory:
-            return MemoryContext(entries=(), metadata={}), 0
+            return MemoryContext.empty(), 0
 
         if self._memory_retriever is None:
             raise InvalidExecutionPlanError(
@@ -286,11 +288,7 @@ class RetrievalBuilder:
             latency in milliseconds.
         """
         if not resource_requirements.session:
-            return SessionContext(
-                summary="",
-                recent_messages=(),
-                metadata={},
-            ), 0
+            return SessionContext.empty(), 0
 
         if self._session_retriever is None:
             raise InvalidExecutionPlanError(

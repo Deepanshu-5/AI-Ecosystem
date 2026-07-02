@@ -19,7 +19,7 @@ class TestRetrievalMetadata:
             memory_latency_ms=50,
             session_latency_ms=30,
             total_latency_ms=180,
-            schema_version=1,
+           
         )
         assert meta.knowledge_count == 2
         assert meta.total_latency_ms == 180
@@ -33,7 +33,7 @@ class TestRetrievalMetadata:
             memory_latency_ms=0,
             session_latency_ms=0,
             total_latency_ms=0,
-            schema_version=1,
+            
         )
         with pytest.raises(AttributeError):
             meta.knowledge_count = 5  # type: ignore[misc]
@@ -47,12 +47,11 @@ class TestRetrievalMetadata:
             memory_latency_ms=50,
             session_latency_ms=30,
             total_latency_ms=180,
-            schema_version=1,
+            
         )
         d = meta.to_dict()
         assert d["knowledge_count"] == 2
         assert d["total_latency_ms"] == 180
-        assert d["schema_version"] == 1
 
     def test_zero_values(self) -> None:
         meta = RetrievalMetadata(
@@ -63,7 +62,7 @@ class TestRetrievalMetadata:
             memory_latency_ms=0,
             session_latency_ms=0,
             total_latency_ms=0,
-            schema_version=1,
+            
         )
         assert meta.knowledge_count == 0
         assert meta.total_latency_ms == 0

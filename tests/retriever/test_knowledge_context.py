@@ -44,11 +44,11 @@ class TestKnowledgeContext:
         assert ctx.metadata == {"key": "value"}
 
     def test_empty_context(self) -> None:
-        ctx = KnowledgeContext(items=(), metadata={})
+        ctx = KnowledgeContext.empty()
         assert len(ctx.items) == 0
 
     def test_immutability(self) -> None:
-        ctx = KnowledgeContext(items=(), metadata={})
+        ctx = KnowledgeContext.empty()
         with pytest.raises(AttributeError):
             ctx.items = ()  # type: ignore[misc]
 

@@ -85,7 +85,13 @@ class SessionContext:
     summary: str
     recent_messages: tuple[SessionMessage, ...]
     metadata: dict[str, object]
-
+    @classmethod
+    def empty(cls) -> "SessionContext":
+        return cls(
+            summary="",
+            recent_messages=(),
+            metadata={},
+        )
     def to_dict(self) -> dict[str, object]:
         """
         Return a stable, explicit dictionary representation.

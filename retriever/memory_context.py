@@ -87,6 +87,13 @@ class MemoryContext:
 
     entries: tuple[MemoryEntry, ...]
     metadata: dict[str, object]
+    
+    @classmethod
+    def empty(cls) -> "MemoryContext":
+        return cls(
+            entries=(),
+            metadata={},
+        )
 
     def to_dict(self) -> dict[str, object]:
         """

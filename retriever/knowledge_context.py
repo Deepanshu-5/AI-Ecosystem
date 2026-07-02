@@ -89,7 +89,14 @@ class KnowledgeContext:
 
     items: tuple[KnowledgeItem, ...]
     metadata: dict[str, object]
-
+    
+    @classmethod
+    def empty(cls) -> "KnowledgeContext":
+        return cls(
+            items=(),
+            metadata={},
+        )
+     
     def to_dict(self) -> dict[str, object]:
         """
         Return a stable, explicit dictionary representation.
@@ -111,3 +118,4 @@ class KnowledgeContext:
             "items": [item.to_dict() for item in self.items],
             "metadata": dict(self.metadata),
         }
+    

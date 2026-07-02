@@ -28,16 +28,11 @@ Implementation continues according to the established architecture.
 
 Current Engineering Focus
 
-Planner integration.
-
-The Planner core has been completed, validated, and frozen for Production V1.
-Current engineering effort is focused on integrating the Planner with the retrieval pipeline.
-
 ---
 
 Overall Progress
 
-Approximately 78%.
+Approximately 85%.
 
 The project has transitioned from infrastructure construction to intelligent orchestration.
 
@@ -138,7 +133,7 @@ Capabilities
 
 Next work
 
-Integration with Planner.
+Integration with Retriever.
 
 ---
 
@@ -169,10 +164,40 @@ Capabilities
 
 Next Work
 
-Integrate the Planner with the Retrieval Pipeline.
+No planned functional work.
+
+Architecture frozen.
 
 ---
+Retriever
 
+Status
+
+Production Ready
+
+Progress
+
+100%
+
+Capabilities
+
+- Deterministic retrieval orchestration
+- Knowledge retrieval
+- Memory retrieval
+- Session retrieval
+- RetrievedContext generation
+- Retrieval validation
+- Builder pattern
+- Immutable context contracts
+- Comprehensive unit testing
+- Component testing
+- End-to-end pipeline validation
+
+Next Work
+
+Integrate Retriever with Context Budgeter.
+
+---
 Model Routing
 
 Status
@@ -249,7 +274,7 @@ Progress
 
 Current focus
 
-Planner integration with downstream components..
+Retriever integration with Context Budgeter.
 
 Future focus
 
@@ -305,21 +330,18 @@ Engineering priorities should continue to follow measured bottlenecks rather tha
 
 Priority 1
 
-Integrate Planner with Knowledge, Memory, and Session retrieval.
+Integrate Retriever with Context Budgeter.
+
 
 Priority 2
 
-Implement Retrieval Orchestration.
+Implement Model Routing.
 
 Priority 3
 
-Implement Model Routing.
-
-Priority 4
-
 Implement Tool Routing.
 
-Priority 5
+Priority 4
 
 Expand Observability and Evaluation.
 
@@ -350,15 +372,15 @@ These items are intentionally postponed to preserve focus on Production V1.
 
 Current Sprint
 
-Planner Integration
+Retriever Integration
 
 Primary Deliverables
 
-- Planner integration
-- Retrieval orchestration
-- End-to-end planner pipeline
-- Retrieval contracts
-- Integration testing
+Retriever implementation
+Retriever validation
+Context Budgeter integration
+End-to-end retrieval pipeline
+Integration testing
 
 Success Criteria
 
@@ -372,11 +394,11 @@ Production-quality implementation.
 
 9.7 Next Architectural Milestones
 
-1. Retrieval Integration
+1. Context Budgeter Integration
 
 ↓
 
-2. Model Routing
+2.Prompt Builder
 
 ↓
 
