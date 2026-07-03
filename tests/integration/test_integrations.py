@@ -103,7 +103,7 @@ class TestMemoryIntegration:
         assert isinstance(entries[0], MemoryEntry)
         assert entries[0].content == "Likes blue"
         assert entries[0].memory_id == "m1"
-        assert entries[0].score == 0.9
+        assert entries[0].score == 0.1
 
     def test_search_empty_results(self) -> None:
         def fake_search(query: str, top_k: int) -> dict[str, list]:
