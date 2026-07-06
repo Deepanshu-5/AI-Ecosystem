@@ -335,20 +335,19 @@ class ContextBudgeter:
         if remaining_budget <= 0:
             return result
 
-        # Track which items are already selected
-        selected_knowledge_texts = {
-            r["text"] for r in result["knowledge"]
-        }
-        selected_memory_texts = {
-            r["text"] for r in result["memory"]
-        }
-        selected_session_texts = {
-            r["text"] for r in result["session"]
-        }
+        # Track which original items are already selected by identity
+        selected_knowledge_ids = {id(r["unit"]) for r in result["knowledge"]}
+        selected_memory_ids = {id(r["unit"]) for r in result["memory"]}
+        selected_session_ids = set()
+        for r in result["session"]:
+            if r.get("summary"):
+                selected_session_ids.add("__summary__")
+            else:
+                selected_session_ids.add(id(r["unit"]))
 
         # Knowledge redistribution
         for item in retrieved_context.knowledge.items:
-            if item.text in selected_knowledge_texts:
+            if id(item) in selected_knowledge_ids:
                 continue
             record = self._try_select_unit(item.text, remaining_budget)
             if record is not None:
@@ -361,11 +360,11 @@ class ContextBudgeter:
                     }
                 )
                 remaining_budget -= record["tokens"]
-                selected_knowledge_texts.add(record["text"])
+                selected_knowledge_ids.add(id(item))
 
         # Memory redistribution
         for entry in retrieved_context.memory.entries:
-            if entry.content in selected_memory_texts:
+            if id(entry) in selected_memory_ids:
                 continue
             record = self._try_select_unit(entry.content, remaining_budget)
             if record is not None:
@@ -378,11 +377,11 @@ class ContextBudgeter:
                     }
                 )
                 remaining_budget -= record["tokens"]
-                selected_memory_texts.add(record["text"])
+                selected_memory_ids.add(id(entry))
 
         # Session redistribution
         summary = retrieved_context.session.summary
-        if summary and summary not in selected_session_texts:
+        if summary and "__summary__" not in selected_session_ids:
             record = self._try_select_unit(summary, remaining_budget)
             if record is not None:
                 result["session"].append(
@@ -395,10 +394,10 @@ class ContextBudgeter:
                     }
                 )
                 remaining_budget -= record["tokens"]
-                selected_session_texts.add(record["text"])
+                selected_session_ids.add("__summary__")
 
         for msg in retrieved_context.session.recent_messages:
-            if msg.content in selected_session_texts:
+            if id(msg) in selected_session_ids:
                 continue
             record = self._try_select_unit(msg.content, remaining_budget)
             if record is not None:
@@ -412,7 +411,7 @@ class ContextBudgeter:
                     }
                 )
                 remaining_budget -= record["tokens"]
-                selected_session_texts.add(record["text"])
+                selected_session_ids.add(id(msg))
 
         return result
 

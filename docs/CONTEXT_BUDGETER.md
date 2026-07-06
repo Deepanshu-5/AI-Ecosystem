@@ -2104,8 +2104,3 @@ Do not silently change the architecture to simplify implementation.
 **CONTEXT BUDGETING V1 — FROZEN**
 
 This document is the authoritative implementation contract for the V1 Context Budgeting Layer.
-
-
-
-
-
