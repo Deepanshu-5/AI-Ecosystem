@@ -268,17 +268,27 @@ class TestContextBudgeter:
 
     def test_unit_truncation(self) -> None:
         budgeter = self._make_counter()
-        items = (KnowledgeItem(text="ABCDEFGHIJ", source="doc1"),)  # 10 tokens
-        ctx = self._make_retrieved_context(knowledge_items=items)
-        # query="hi" = 2, context_budget = 20 - 5 - 2 = 13
-        # Phase 1: knowledge cap = 13 * 0.6 = 7
-        # ABCDEFGHIJ(10) > 7, doesn't fit completely
-        # Try truncation: marker " [...]" = 6 tokens, content budget = 7 - 6 = 1
-        # truncated = "A" + " [...]" = 7 tokens, fits
-        result = budgeter.budget(ctx, "hi", total_budget=20, reserved_budget=5)
+
+        items = (
+            KnowledgeItem(
+            text="A" * 20,
+            source="doc1",
+           ),
+        )
+
+        ctx = self._make_retrieved_context(
+         knowledge_items=items,
+        )
+
+        result = budgeter.budget(
+            ctx,
+            "hi",
+            total_budget=20,
+            reserved_budget=5,
+        )
 
         assert len(result.knowledge.items) == 1
-        assert result.knowledge.items[0].text != "ABCDEFGHIJ"
+        assert result.knowledge.items[0].text != "A" * 20
         assert result.metadata.truncated_unit_count == 1
 
     # --- Zero remaining budget ---
@@ -298,12 +308,51 @@ class TestContextBudgeter:
 
     def test_no_duplicate_selection(self) -> None:
         budgeter = self._make_counter()
-        items = (KnowledgeItem(text="Fact", source="doc1"),)
-        ctx = self._make_retrieved_context(knowledge_items=items)
-        result = budgeter.budget(ctx, "hi", total_budget=100, reserved_budget=10)
 
-        texts = [item.text for item in result.knowledge.items]
-        assert len(texts) == len(set(texts))
+        item = KnowledgeItem(
+            text="A" * 80,
+            source="doc1",
+        )
+
+        ctx = self._make_retrieved_context(
+            knowledge_items=(item,),
+        )
+
+        result = budgeter.budget(
+            ctx,
+            "hi",
+            total_budget=112,
+            reserved_budget=10,
+        )
+
+        assert len(result.knowledge.items) == 1
+        assert result.knowledge.items[0].text == "A" * 80
+    
+    def test_phase2_selects_full_unit_before_truncation(self) -> None:
+        budgeter = self._make_counter()
+
+        items = (
+            KnowledgeItem(
+                text="A" * 80,
+                source="doc1",
+            ),
+        )
+
+        ctx = self._make_retrieved_context(
+            knowledge_items=items,
+        )
+
+        result = budgeter.budget(
+            ctx,
+            "hi",
+            total_budget=112,
+            reserved_budget=10,
+        )
+
+        assert len(result.knowledge.items) == 1
+        assert result.knowledge.items[0].text == "A" * 80
+        assert result.metadata.knowledge_tokens == 80
+        assert result.metadata.truncated_unit_count == 0
 
     # --- Original RetrievedContext not mutated ---
 
@@ -317,6 +366,55 @@ class TestContextBudgeter:
 
         assert ctx.knowledge.items[0].text == original_text
         assert result.knowledge.items[0].text == original_text
+        
+    def test_context_metadata_preserved_without_aliasing(self) -> None:
+        budgeter = self._make_counter()
+
+        original_metadata = {
+            "query": "hi",
+            "item_count": 1,
+        }
+
+        ctx = RetrievedContext(
+            knowledge=KnowledgeContext(
+                items=(
+                    KnowledgeItem(
+                        text="Fact",
+                        source="doc1",
+                    ),
+                ),
+                metadata=original_metadata,
+            ),
+            memory=MemoryContext(
+                entries=(),
+                metadata={},
+            ),
+            session=SessionContext(
+                summary="",
+                recent_messages=(),
+                metadata={},
+            ),
+            metadata=RetrievalMetadata(
+                knowledge_count=1,
+                memory_count=0,
+                session_count=0,
+                knowledge_latency_ms=0,
+                memory_latency_ms=0,
+                session_latency_ms=0,
+                total_latency_ms=0,
+                schema_version=1,
+            ),
+        )
+
+        result = budgeter.budget(
+            ctx,
+            "hi",
+            total_budget=100,
+            reserved_budget=10,
+        )
+
+        assert result.knowledge.metadata == original_metadata
+        assert result.knowledge.metadata is not original_metadata
 
     # --- Determinism ---
 

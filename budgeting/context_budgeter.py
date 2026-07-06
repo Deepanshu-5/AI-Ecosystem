@@ -127,14 +127,17 @@ class ContextBudgeter:
 
         # 5. Build category contexts and metadata
         knowledge_ctx, knowledge_tokens = self._build_knowledge_context(
-            phase2_result["knowledge"]
-        )
+            phase2_result["knowledge"],
+            retrieved_context.knowledge.metadata,
+)
         memory_ctx, memory_tokens = self._build_memory_context(
-            phase2_result["memory"]
-        )
+            phase2_result["memory"],
+            retrieved_context.memory.metadata,
+)
         session_ctx, session_tokens = self._build_session_context(
-            phase2_result["session"]
-        )
+            phase2_result["session"],
+            retrieved_context.session.metadata,
+)
 
         used_context_tokens = knowledge_tokens + memory_tokens + session_tokens
         remaining_tokens = context_budget - used_context_tokens
@@ -207,18 +210,27 @@ class ContextBudgeter:
         return truncated_query, truncated_tokens, True
 
     def _truncate_with_marker(self, text: str, max_tokens: int) -> str:
-        """Truncate text including a truncation marker in token limit."""
+        """Truncate text while guaranteeing the final result fits max_tokens."""
         if max_tokens <= 0:
-            return ""
+         return ""
 
         marker_tokens = self._count_fn(_TRUNCATION_MARKER)
-        content_budget = max_tokens - marker_tokens
-        if content_budget <= 0:
-            # Not enough room for marker, truncate without it
+
+        if marker_tokens > max_tokens:
             return self._truncate_fn(text, max_tokens)
 
-        truncated = self._truncate_fn(text, content_budget)
-        return truncated + _TRUNCATION_MARKER
+        content_budget = max_tokens - marker_tokens
+
+        while content_budget >= 0:
+            truncated = self._truncate_fn(text, content_budget)
+            result = truncated + _TRUNCATION_MARKER
+
+            if self._count_fn(result) <= max_tokens:
+                return result
+
+            content_budget -= 1
+
+        return self._truncate_fn(text, max_tokens)
 
     def _phase1_allocate(
         self,
@@ -248,7 +260,11 @@ class ContextBudgeter:
         # Knowledge
         cat_budget = category_budgets["knowledge"]
         for item in retrieved_context.knowledge.items:
-            record = self._try_select_unit(item.text, cat_budget)
+            record = self._try_select_unit(
+                item.text,
+                cat_budget,
+                allow_truncation=False,
+            )
             if record is not None:
                 result["knowledge"].append(
                     {
@@ -263,7 +279,7 @@ class ContextBudgeter:
         # Memory
         cat_budget = category_budgets["memory"]
         for entry in retrieved_context.memory.entries:
-            record = self._try_select_unit(entry.content, cat_budget)
+            record = self._try_select_unit(entry.content, cat_budget, allow_truncation=False)
             if record is not None:
                 result["memory"].append(
                     {
@@ -279,7 +295,7 @@ class ContextBudgeter:
         cat_budget = category_budgets["session"]
         summary = retrieved_context.session.summary
         if summary:
-            record = self._try_select_unit(summary, cat_budget)
+            record = self._try_select_unit(summary, cat_budget, allow_truncation=False)
             if record is not None:
                 result["session"].append(
                     {
@@ -293,7 +309,7 @@ class ContextBudgeter:
                 cat_budget -= record["tokens"]
 
         for msg in retrieved_context.session.recent_messages:
-            record = self._try_select_unit(msg.content, cat_budget)
+            record = self._try_select_unit(msg.content, cat_budget, allow_truncation=False)
             if record is not None:
                 result["session"].append(
                     {
@@ -349,7 +365,7 @@ class ContextBudgeter:
         for item in retrieved_context.knowledge.items:
             if id(item) in selected_knowledge_ids:
                 continue
-            record = self._try_select_unit(item.text, remaining_budget)
+            record = self._try_select_unit(item.text, remaining_budget, allow_truncation=True)
             if record is not None:
                 result["knowledge"].append(
                     {
@@ -366,7 +382,7 @@ class ContextBudgeter:
         for entry in retrieved_context.memory.entries:
             if id(entry) in selected_memory_ids:
                 continue
-            record = self._try_select_unit(entry.content, remaining_budget)
+            record = self._try_select_unit(entry.content, remaining_budget,allow_truncation=True)
             if record is not None:
                 result["memory"].append(
                     {
@@ -382,7 +398,7 @@ class ContextBudgeter:
         # Session redistribution
         summary = retrieved_context.session.summary
         if summary and "__summary__" not in selected_session_ids:
-            record = self._try_select_unit(summary, remaining_budget)
+            record = self._try_select_unit(summary, remaining_budget,allow_truncation=True)
             if record is not None:
                 result["session"].append(
                     {
@@ -399,7 +415,7 @@ class ContextBudgeter:
         for msg in retrieved_context.session.recent_messages:
             if id(msg) in selected_session_ids:
                 continue
-            record = self._try_select_unit(msg.content, remaining_budget)
+            record = self._try_select_unit(msg.content, remaining_budget, allow_truncation=True)
             if record is not None:
                 result["session"].append(
                     {
@@ -416,8 +432,12 @@ class ContextBudgeter:
         return result
 
     def _try_select_unit(
-        self, text: str, budget: int
-    ) -> dict[str, object] | None:
+    self,
+    text: str,
+    budget: int,
+    *,
+    allow_truncation: bool,
+) -> dict[str, object] | None:
         """
         Try to select a unit within the given budget.
 
@@ -430,7 +450,8 @@ class ContextBudgeter:
         tokens = self._count_fn(text)
         if tokens <= budget:
             return {"tokens": tokens, "truncated": False, "text": text}
-
+        if not allow_truncation:
+            return None
         # Try truncation
         truncated = self._truncate_with_marker(text, budget)
         truncated_tokens = self._count_fn(truncated)
@@ -444,8 +465,10 @@ class ContextBudgeter:
         return None
 
     def _build_knowledge_context(
-        self, records: list[dict]
-    ) -> tuple[KnowledgeContext, int]:
+        self,
+        records: list[dict],
+        metadata: dict[str, object],
+) -> tuple[KnowledgeContext, int]:
         """Build KnowledgeContext from selected records."""
         items: list[KnowledgeItem] = []
         total_tokens = 0
@@ -464,10 +487,18 @@ class ContextBudgeter:
             else:
                 items.append(unit)
             total_tokens += record["tokens"]
-        return KnowledgeContext(items=tuple(items), metadata={}), total_tokens
+        return (
+            KnowledgeContext(
+                items=tuple(items),
+                 metadata=dict(metadata),
+        ),
+        total_tokens,
+    )
 
     def _build_memory_context(
-        self, records: list[dict]
+       self,
+       records: list[dict],
+       metadata: dict[str, object],
     ) -> tuple[MemoryContext, int]:
         """Build MemoryContext from selected records."""
         entries: list[MemoryEntry] = []
@@ -486,10 +517,18 @@ class ContextBudgeter:
             else:
                 entries.append(unit)
             total_tokens += record["tokens"]
-        return MemoryContext(entries=tuple(entries), metadata={}), total_tokens
+        return (
+            MemoryContext(
+               entries=tuple(entries),
+               metadata=dict(metadata),
+            ),
+            total_tokens,
+        )
 
     def _build_session_context(
-        self, records: list[dict]
+       self,
+       records: list[dict],
+       metadata: dict[str, object],
     ) -> tuple[SessionContext, int]:
         """Build SessionContext from selected records."""
         summary = ""
@@ -514,7 +553,7 @@ class ContextBudgeter:
             SessionContext(
                 summary=summary,
                 recent_messages=tuple(messages),
-                metadata={},
+                metadata=dict(metadata),
             ),
             total_tokens,
         )

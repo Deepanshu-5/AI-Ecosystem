@@ -281,3 +281,143 @@ class TestBudgetValidatorOutput:
         with pytest.raises(ContextBudgetValidationError) as exc_info:
             BudgetValidator.validate_output(budgeted, 750, 1000)
         assert "does not equal" in str(exc_info.value)
+    
+    def test_invalid_budgeted_context_type_fails(self) -> None:
+        with pytest.raises(ContextBudgetValidationError):
+            BudgetValidator.validate_output(
+                "invalid",  # type: ignore[arg-type]
+                context_budget=100,
+                total_budget=200,
+            )
+
+
+    def test_negative_used_context_tokens_fails(self) -> None:
+        metadata = BudgetMetadata(
+            total_budget=200,
+            reserved_tokens=20,
+            query_tokens=10,
+            context_budget=170,
+            used_context_tokens=-1,
+            remaining_tokens=171,
+            knowledge_tokens=0,
+            memory_tokens=0,
+            session_tokens=0,
+        )
+        context = BudgetedContext(
+            knowledge=KnowledgeContext(items=(), metadata={}),
+            memory=MemoryContext(entries=(), metadata={}),
+            session=SessionContext(
+                summary="",
+                recent_messages=(),
+                metadata={},
+            ),
+            metadata=metadata,
+            effective_query="query",
+        )
+
+        with pytest.raises(ContextBudgetValidationError):
+            BudgetValidator.validate_output(
+                context,
+                context_budget=170,
+                total_budget=200,
+            )
+
+
+    def test_non_boolean_query_truncated_fails(self) -> None:
+        metadata = BudgetMetadata(
+            total_budget=200,
+            reserved_tokens=20,
+            query_tokens=10,
+            context_budget=170,
+            used_context_tokens=0,
+            remaining_tokens=170,
+            knowledge_tokens=0,
+            memory_tokens=0,
+            session_tokens=0,
+            query_truncated=1,  # type: ignore[arg-type]
+        )
+
+        context = BudgetedContext(
+            knowledge=KnowledgeContext(items=(), metadata={}),
+            memory=MemoryContext(entries=(), metadata={}),
+            session=SessionContext(
+                summary="",
+                recent_messages=(),
+                metadata={},
+            ),
+            metadata=metadata,
+            effective_query="query",
+        )
+
+        with pytest.raises(ContextBudgetValidationError):
+            BudgetValidator.validate_output(
+                context,
+                context_budget=170,
+                total_budget=200,
+            )
+
+
+    def test_metadata_total_budget_mismatch_fails(self) -> None:
+        metadata = BudgetMetadata(
+            total_budget=999,
+            reserved_tokens=20,
+            query_tokens=10,
+            context_budget=170,
+            used_context_tokens=0,
+            remaining_tokens=170,
+            knowledge_tokens=0,
+            memory_tokens=0,
+            session_tokens=0,
+        )
+
+        context = BudgetedContext(
+            knowledge=KnowledgeContext(items=(), metadata={}),
+            memory=MemoryContext(entries=(), metadata={}),
+            session=SessionContext(
+                summary="",
+                recent_messages=(),
+                metadata={},
+            ),
+            metadata=metadata,
+            effective_query="query",
+        )
+
+        with pytest.raises(ContextBudgetValidationError):
+            BudgetValidator.validate_output(
+                context,
+                context_budget=170,
+                total_budget=200,
+            )
+
+
+    def test_remaining_tokens_mismatch_fails(self) -> None:
+        metadata = BudgetMetadata(
+            total_budget=200,
+            reserved_tokens=20,
+            query_tokens=10,
+            context_budget=170,
+            used_context_tokens=50,
+            remaining_tokens=999,
+            knowledge_tokens=50,
+            memory_tokens=0,
+            session_tokens=0,
+        )
+
+        context = BudgetedContext(
+            knowledge=KnowledgeContext(items=(), metadata={}),
+            memory=MemoryContext(entries=(), metadata={}),
+            session=SessionContext(
+                summary="",
+                recent_messages=(),
+                metadata={},
+            ),
+            metadata=metadata,
+            effective_query="query",
+        )
+
+        with pytest.raises(ContextBudgetValidationError):
+            BudgetValidator.validate_output(
+                context,
+                context_budget=170,
+                total_budget=200,
+            )
