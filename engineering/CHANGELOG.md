@@ -503,6 +503,285 @@ The Retrieval subsystem has been introduced as the deterministic execution layer
 Next Milestone
 Context Budgeter Integration
 ---
+Version
+
+0.4.0
+
+Release Date
+
+2026-07-07
+
+Sprint
+
+Context Budgeting V1
+
+Status
+
+Completed
+
+---
+
+Summary
+
+Completed the production V1 Context Budgeting Layer and validated the Planner, Retriever, Integration, and Budgeting pipeline against the full project regression suite.
+
+The new Budgeting Layer consumes RetrievedContext and produces an immutable BudgetedContext under deterministic token-budget constraints.
+
+---
+
+Motivation
+
+The AI Ecosystem requires strict control over how much retrieved context reaches downstream prompt construction.
+
+The previous legacy Context Budgeter used a generic ContextItem-based architecture and remained coupled to legacy consumers.
+
+The new Context Budgeting Layer establishes a deterministic domain boundary between retrieval and future prompt construction.
+
+The implementation improves:
+
+- Token budget enforcement.
+- Context allocation determinism.
+- Category budget protection.
+- Unused budget redistribution.
+- Query overflow handling.
+- Context truncation safety.
+- Budget observability.
+- Downstream contract stability.
+
+---
+
+Architectural Impact
+
+Affected Layer
+
+- Retriever
+- Integration
+- Context Budgeting
+- Control Plane
+
+Architecture Changed?
+
+Yes.
+
+A new production V1 Context Budgeting Layer has been introduced.
+
+The canonical context pipeline is now:
+
+Planner
+↓
+Retriever Integration
+↓
+RetrievedContext
+↓
+ContextBudgeter
+↓
+BudgetedContext
+
+The legacy services/context_budgeter.py remains isolated for existing legacy consumers and has not been migrated or removed.
+
+---
+
+Implementation
+
+Files Added
+
+budgeting/
+
+- __init__.py
+- budget_metadata.py
+- budget_validator.py
+- budgeted_context.py
+- context_budgeter.py
+- exceptions.py
+
+Tests Added
+
+tests/budgeting/
+
+- test_budget_metadata.py
+- test_budget_validator.py
+- test_budgeted_context.py
+- test_context_budgeter.py
+
+Files Modified
+
+- retriever/retrieval_metadata.py
+- retriever/retrieval_builder.py
+- tests/retriever/test_retrieval_validator.py
+- tests/retriever/test_retrieved_context.py
+
+Major Classes
+
+- ContextBudgeter
+- BudgetValidator
+- BudgetedContext
+- BudgetMetadata
+
+Major APIs
+
+- ContextBudgeter.budget()
+- BudgetValidator.validate_input()
+- BudgetValidator.validate_output()
+- BudgetedContext.to_dict()
+- BudgetMetadata.to_dict()
+
+Major Contracts
+
+- RetrievedContext
+- BudgetedContext
+- BudgetMetadata
+
+---
+
+Key Engineering Decisions
+
+- RetrievedContext is the canonical Budgeting Layer input.
+- BudgetedContext is the canonical Budgeting Layer output.
+- Budgeting does not perform retrieval.
+- Budgeting does not build prompts.
+- Budgeting does not reinterpret ExecutionPlan.
+- ContextItem remains isolated to the legacy Budgeter.
+- Allocation uses deterministic two-phase budgeting.
+- Phase 1 protects category allocation.
+- Phase 2 redistributes real unused context budget.
+- Complete units are preferred before controlled truncation.
+- Query overflow follows an explicit truncation policy.
+- Truncation markers are included in token accounting.
+- RetrievedContext is never mutated.
+- Retrieval context metadata is preserved without mutable aliasing.
+- RetrievedContext owns retrieval schema version.
+- RetrievalMetadata owns retrieval counts and latency diagnostics only.
+
+---
+
+Validation
+
+Architecture Review
+
+PASS
+
+Implementation Review
+
+PASS
+
+Integration Review
+
+PASS
+
+Testing
+
+PASS
+
+Budgeting Tests
+
+65 Passed
+
+Retriever Tests
+
+84 Passed
+
+Retriever + Integration + Budgeting Cross-Layer Tests
+
+197 Passed
+
+Full Project Regression
+
+249 Passed
+
+Warnings
+
+1 external Chroma dependency deprecation warning.
+
+No project test failure.
+
+---
+
+Performance Impact
+
+Latency
+
+No measured regression recorded.
+
+Token Usage
+
+Deterministic token-budget enforcement established.
+
+Memory Usage
+
+No measured regression recorded.
+
+CPU Usage
+
+No measured regression recorded.
+
+Quality
+
+Deterministic context allocation and explicit budget validation established.
+
+No unmeasured performance improvement is claimed.
+
+---
+
+Breaking Changes
+
+Internal Retriever metadata contract correction:
+
+RetrievalMetadata no longer owns schema_version.
+
+RetrievedContext remains the single retrieval schema-version authority through its version contract.
+
+No external application migration has been performed.
+
+---
+
+Documentation Updated
+
+- AI_ECOSYSTEM_BOOTSTRAP.md
+- PROJECT_SNAPSHOT.md
+- CHANGELOG.md
+- CONTEXT_BUDGETING.md
+
+---
+
+Future Follow-up
+
+- Design Prompt Builder architecture.
+- Define the prompt output contract.
+- Connect BudgetedContext to Prompt Builder.
+- Design the new application control flow.
+- Migrate legacy local RAG only after the new control path is validated.
+- Migrate MCP only after the new control path is validated.
+- Remove the legacy Context Budgeter only after dependency tracing confirms no live consumers remain.
+
+---
+
+Engineering Outcome
+
+Context Budgeting V1 is architecturally frozen.
+
+The validated upstream control path is:
+
+Planner
+↓
+Retriever Integration
+↓
+RetrievedContext
+↓
+Context Budgeting
+↓
+BudgetedContext
+
+The next architectural milestone is Prompt Builder.
+
+---
+
+Next Milestone
+
+Version 0.5.0
+
+Prompt Builder
+
+---
 
 ---
 
