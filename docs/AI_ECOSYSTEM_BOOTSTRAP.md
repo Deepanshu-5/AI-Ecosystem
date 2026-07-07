@@ -128,27 +128,27 @@ Current Project Status
 
 Overall Progress
 
-Approximately 85%.
+Approximately 90%.
 
 Current Phase
 
-Production V1.
+Production V1 Development.
 
 Current Focus
 
-Retriever Integration and Context Budgeter Integration
+Prompt Builder Architecture.
 
 Current Highest Priority
 
-Integrate the completed Retriever with the Context Budgeting Layer.
+Design and implement the Prompt Builder Layer that consumes BudgetedContext and produces deterministic prompt input for downstream model execution.
 
 Current Major Milestone
 
-Production-ready deterministic Planner completed.
+Retriever Integration and Context Budgeting V1 completed and validated.
 
 Next Milestone
 
-Production-ready Context Budgeter integration.
+Production-ready Prompt Builder.
 
 
 ---
@@ -296,15 +296,20 @@ Do not optimize retrieval without new measurements.
 
 Current Sprint
 
-Context Budgeter Integration
+Prompt Builder Architecture
 
 Current Deliverables
 
-- Context Budgeter Integration
-- Budget Validation
-- Prompt Builder Architecture
+- Prompt Builder architecture design
+- Prompt input contract definition
+- BudgetedContext consumption rules
+- Deterministic prompt assembly rules
+- Prompt Builder validation strategy
+- Prompt Builder testing and acceptance criteria
 
-The Planner has reached Production V1 and is considered architecturally frozen. Future work is limited to bug fixes and backward-compatible improvements.
+The Planner, Retriever, Retriever Integration, and Context Budgeting V1 have been completed and validated.
+
+These completed subsystems are considered architecturally frozen. Future changes are limited to bug fixes, documentation corrections, and explicitly approved backward-compatible improvements.
 
 ---
 ---
@@ -365,6 +370,45 @@ Production Ready (V1)
 The Retriever is now the stable execution subsystem between the Planner and Context Budgeting Layer.
 
 ---
+---
+
+Context Budgeting Status
+
+The Context Budgeting subsystem has been completed and validated.
+
+Completed Components
+
+- ContextBudgeter
+- BudgetValidator
+- BudgetedContext
+- BudgetMetadata
+- Context Budgeting exceptions
+- Deterministic two-phase allocation
+- Category budget protection
+- Shared budget redistribution
+- Query overflow handling
+- Controlled context truncation
+- Budget invariant validation
+
+Verification
+
+- Unit tested
+- Allocation tested
+- Validation tested
+- Cross-layer tested
+- Full project regression tested
+
+Current Status
+
+Production Ready (V1)
+
+The Context Budgeting Layer now consumes RetrievedContext and produces deterministic BudgetedContext for the future Prompt Builder.
+
+Validation Baseline
+
+249 project tests passing.
+
+---
 
 AI Collaboration Instructions
 
@@ -398,8 +442,12 @@ After reading this document and the canonical engineering documents, a contribut
 A contributor should also be able to:
 
 - Understand the completed Planner subsystem.
-- Continue development from the Retrieval Layer without redesigning the Planner.
-- Use the ExecutionPlan as the control contract for downstream components.
+- Understand the completed Retriever and Retriever Integration subsystems.
+- Understand the completed Context Budgeting V1 subsystem.
+- Preserve ExecutionPlan as the Planner control contract.
+- Preserve RetrievedContext as the canonical retrieval output contract.
+- Preserve BudgetedContext as the canonical budgeting output contract.
+- Continue development from the Prompt Builder milestone without redesigning completed upstream subsystems.
 
 This document is the official onboarding entry point for the AI Ecosystem.                             
 # Bootstrap Instructions      

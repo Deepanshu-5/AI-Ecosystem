@@ -28,11 +28,13 @@ Implementation continues according to the established architecture.
 
 Current Engineering Focus
 
+Prompt Builder Architecture
+
 ---
 
 Overall Progress
 
-Approximately 85%.
+Approximately 90%.
 
 The project has transitioned from infrastructure construction to intelligent orchestration.
 
@@ -121,19 +123,33 @@ Production Ready
 
 Progress
 
-≈95%
+100%
 
 Capabilities
 
-- Deterministic budgeting
-- Category protection
-- Context prioritization
-- Token budgeting
-- Starvation prevention
+- RetrievedContext consumption
+- Deterministic two-phase allocation
+- Category budget protection
+- Shared budget redistribution
+- Query token accounting
+- Query overflow handling
+- Controlled unit truncation
+- Budget metadata generation
+- Budget invariant validation
+- Immutable BudgetedContext output
+- Deterministic serialization
 
-Next work
+Validation
 
-Integration with Retriever.
+- 65 Budgeting tests passing
+- Retriever, Integration, and Budgeting cross-layer validation passing
+- Full project regression validation passing
+
+Next Work
+
+No planned functional work.
+
+Architecture frozen for V1.
 
 ---
 
@@ -195,7 +211,48 @@ Capabilities
 
 Next Work
 
-Integrate Retriever with Context Budgeter.
+No planned functional work.
+
+Retriever Integration and Context Budgeting integration completed.
+
+Architecture frozen for V1.
+
+---
+---
+Retriever Integration
+
+Status
+
+Production Ready
+
+Progress
+
+100%
+
+Capabilities
+
+- Infrastructure gateway adaptation
+- Knowledge translation
+- Memory translation
+- Session translation
+- Retriever callable wiring
+- RetrievalBuilder integration
+- Infrastructure exception translation
+- RetrievedContext generation through Integration Layer
+
+Validation
+
+- Gateway tests
+- Translator tests
+- Integration orchestration tests
+- Retriever Integration pipeline tests
+- Cross-layer validation
+
+Next Work
+
+No planned functional work.
+
+Architecture frozen for V1.
 
 ---
 Model Routing
@@ -266,23 +323,35 @@ Control Plane
 
 Status
 
-Emerging
+In Development
 
 Progress
 
-≈35%
+≈60%
 
-Current focus
+Completed Pipeline
 
-Retriever integration with Context Budgeter.
+Planner
+↓
+Retriever Integration
+↓
+Retriever
+↓
+Context Budgeting
 
-Future focus
+Current Focus
 
-Routing.
+Prompt Builder.
+
+Future Focus
+
+Model Routing.
+
+Tool Routing.
 
 Execution policies.
 
-Autonomous orchestration.
+Control Plane orchestration.
 
 ---
 
@@ -330,8 +399,7 @@ Engineering priorities should continue to follow measured bottlenecks rather tha
 
 Priority 1
 
-Integrate Retriever with Context Budgeter.
-
+Design and implement Prompt Builder.
 
 Priority 2
 
@@ -342,6 +410,10 @@ Priority 3
 Implement Tool Routing.
 
 Priority 4
+
+Complete Control Plane orchestration.
+
+Priority 5
 
 Expand Observability and Evaluation.
 
@@ -372,33 +444,37 @@ These items are intentionally postponed to preserve focus on Production V1.
 
 Current Sprint
 
-Retriever Integration
+Prompt Builder Architecture
 
 Primary Deliverables
 
-Retriever implementation
-Retriever validation
-Context Budgeter integration
-End-to-end retrieval pipeline
-Integration testing
+- Prompt Builder architecture
+- Prompt input contract
+- BudgetedContext consumption rules
+- Deterministic prompt assembly
+- Prompt validation strategy
+- Prompt Builder tests
+- Acceptance criteria
 
 Success Criteria
 
-Deterministic planning.
-
-Immutable execution contracts.
-
-Production-quality implementation.
+- BudgetedContext remains the canonical context input.
+- Prompt construction is deterministic.
+- Budgeting decisions are not reinterpreted.
+- Retrieval is not performed inside Prompt Builder.
+- Prompt Builder does not modify upstream domain contracts.
+- Prompt output contract is explicit and immutable.
+- Existing 249-test project baseline has no regression.
 
 ---
 
 9.7 Next Architectural Milestones
 
-1. Context Budgeter Integration
+1. Prompt Builder
 
 ↓
 
-2.Prompt Builder
+2. Model Routing
 
 ↓
 
@@ -422,9 +498,11 @@ No critical architectural risks identified.
 
 Current implementation risks
 
-- Retrieval integration correctness.
-- Maintaining deterministic planner behaviour.
-- Preventing coupling between Planner and infrastructure.
+- Prompt Builder reinterpreting Budgeting decisions.
+- Prompt assembly introducing hidden token growth.
+- Coupling Prompt Builder to retrieval or infrastructure.
+- Duplicating budgeting responsibility inside prompt construction.
+- Breaking deterministic upstream contracts.
 
 Mitigation
 
