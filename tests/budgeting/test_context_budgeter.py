@@ -53,7 +53,6 @@ class TestContextBudgeter:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
             ),
         )
 
@@ -402,7 +401,6 @@ class TestContextBudgeter:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
             ),
         )
 

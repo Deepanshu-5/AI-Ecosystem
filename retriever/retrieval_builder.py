@@ -170,7 +170,6 @@ class RetrievalBuilder:
             memory_latency_ms=memory_latency_ms,
             session_latency_ms=session_latency_ms,
             total_latency_ms=total_latency_ms,
-            schema_version=1,
         )
 
         retrieved_context = RetrievedContext(

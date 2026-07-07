@@ -33,7 +33,6 @@ class TestBudgetValidatorInput:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
             ),
         )
 
@@ -120,7 +119,6 @@ class TestBudgetValidatorCategoryCaps:
                     memory_latency_ms=0,
                     session_latency_ms=0,
                     total_latency_ms=0,
-                    schema_version=1,
                 ),
             ),
             "query",
@@ -143,7 +141,7 @@ class TestBudgetValidatorCategoryCaps:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
+
             ),
         )
         with pytest.raises(ContextBudgetValidationError) as exc_info:
@@ -164,7 +162,6 @@ class TestBudgetValidatorCategoryCaps:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
             ),
         )
         with pytest.raises(ContextBudgetValidationError) as exc_info:
@@ -185,7 +182,6 @@ class TestBudgetValidatorCategoryCaps:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
             ),
         )
         with pytest.raises(ContextBudgetValidationError) as exc_info:
@@ -206,7 +202,6 @@ class TestBudgetValidatorCategoryCaps:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-                schema_version=1,
             ),
         )
         with pytest.raises(ContextBudgetValidationError) as exc_info:

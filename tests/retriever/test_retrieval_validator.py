@@ -60,7 +60,6 @@ class TestRetrievalValidator:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-            schema_version=1,
             ),
         )
         RetrievalValidator.validate(ctx)  # should not raise
@@ -164,7 +163,6 @@ class TestRetrievalValidator:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-            schema_version=1,
             ),
             version=999,
         )
@@ -185,7 +183,6 @@ class TestRetrievalValidator:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-            schema_version=1,
             ),
         )
         with pytest.raises(RetrievalValidationError) as exc_info:
@@ -228,7 +225,6 @@ class TestRetrievalValidator:
                 memory_latency_ms=0,
                 session_latency_ms=0,
                 total_latency_ms=0,
-            schema_version=1,
             ),
         )
         with pytest.raises(RetrievalValidationError) as exc_info:

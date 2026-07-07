@@ -42,7 +42,6 @@ class RetrievalMetadata:
     memory_latency_ms: int
     session_latency_ms: int
     total_latency_ms: int
-    schema_version: int
 
     def to_dict(self) -> dict[str, object]:
         """
@@ -69,5 +68,4 @@ class RetrievalMetadata:
             "memory_latency_ms": self.memory_latency_ms,
             "session_latency_ms": self.session_latency_ms,
             "total_latency_ms": self.total_latency_ms,
-            "schema_version": self.schema_version,
         }

@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING
 from budgeting.exceptions import ContextBudgetValidationError
 
 if TYPE_CHECKING:
-    from budgeting.budget_metadata import BudgetMetadata
     from budgeting.budgeted_context import BudgetedContext
     from retriever.retrieved_context import RetrievedContext
 
@@ -35,18 +34,128 @@ class BudgetValidator:
     """
 
     @staticmethod
+    def validate_input(
+        retrieved_context: "RetrievedContext",
+        query: str,
+        total_budget: int,
+        reserved_budget: int,
+        category_caps: dict[str, float] | None,
+    ) -> None:
+        """
+        Validate budgeting inputs and category-cap configuration.
+
+        Raises:
+            ContextBudgetValidationError:
+                If one or more input invariants are violated.
+        """
+        from retriever.retrieved_context import RetrievedContext as _RetrievedContext
+
+        violations: list[str] = []
+
+        if not isinstance(retrieved_context, _RetrievedContext):
+            violations.append(
+                "retrieved_context: expected RetrievedContext, "
+                f"got {type(retrieved_context).__name__}"
+            )
+
+        if not isinstance(query, str):
+            violations.append(
+                f"query: expected str, got {type(query).__name__}"
+            )
+        elif not query.strip():
+            violations.append(
+                "query: must not be empty or whitespace-only"
+            )
+
+        if (
+            not isinstance(total_budget, int)
+            or isinstance(total_budget, bool)
+            or total_budget <= 0
+        ):
+            violations.append(
+                "total_budget: must be a positive integer"
+            )
+
+        if (
+            not isinstance(reserved_budget, int)
+            or isinstance(reserved_budget, bool)
+            or reserved_budget < 0
+        ):
+            violations.append(
+                "reserved_budget: must be a non-negative integer"
+            )
+
+        if (
+            isinstance(total_budget, int)
+            and not isinstance(total_budget, bool)
+            and isinstance(reserved_budget, int)
+            and not isinstance(reserved_budget, bool)
+            and reserved_budget >= total_budget
+        ):
+            violations.append(
+                "reserved_budget: must be less than total_budget"
+            )
+
+        if category_caps is not None:
+            expected_keys = {"knowledge", "memory", "session"}
+
+            if not isinstance(category_caps, dict):
+                violations.append(
+                    "category_caps: expected dict"
+                )
+            else:
+                actual_keys = set(category_caps.keys())
+
+                if actual_keys != expected_keys:
+                    violations.append(
+                        "category_caps: must contain exactly "
+                        "'knowledge', 'memory', and 'session'"
+                    )
+                else:
+                    caps_are_numeric = True
+
+                    for category, value in category_caps.items():
+                        if (
+                            not isinstance(value, (int, float))
+                            or isinstance(value, bool)
+                        ):
+                            violations.append(
+                                f"category_caps.{category}: must be numeric"
+                            )
+                            caps_are_numeric = False
+                        elif value < 0:
+                            violations.append(
+                                f"category_caps.{category}: "
+                                "must be non-negative"
+                            )
+
+                    if caps_are_numeric:
+                        total = sum(category_caps.values())
+
+                        if abs(total - 1.0) > 1e-9:
+                            violations.append(
+                                "category_caps: must total exactly 1.0"
+                            )
+
+        if violations:
+            raise ContextBudgetValidationError(
+                "Budget input validation failed:\n- "
+                + "\n- ".join(violations)
+            )
+
+    @staticmethod
     def validate_output(
-    budgeted_context: "BudgetedContext",
-    context_budget: int,
-    total_budget: int,
+        budgeted_context: "BudgetedContext",
+        context_budget: int,
+        total_budget: int,
     ) -> None:
         """
         Validate BudgetedContext output invariants.
 
         Raises:
-        ContextBudgetValidationError:
-            If output structure or budgeting invariants are invalid.
-    """
+            ContextBudgetValidationError:
+                If output structure or budgeting invariants are invalid.
+        """
         from budgeting.budget_metadata import BudgetMetadata as _BudgetMetadata
         from budgeting.budgeted_context import BudgetedContext as _BudgetedContext
         from retriever.knowledge_context import KnowledgeContext
@@ -94,7 +203,7 @@ class BudgetValidator:
                 )
             elif value < 0:
                 violations.append(
-                    f"metadata.{field_name}: must be >= 0, got {value}"
+                    f"metadata.{field_name}: negative value {value} is invalid"
                 )
 
         if not isinstance(meta.query_truncated, bool):
