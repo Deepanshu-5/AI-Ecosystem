@@ -782,7 +782,302 @@ Version 0.5.0
 Prompt Builder
 
 ---
+---
 
+Version
+
+0.5.0
+
+Release Date
+
+2026-07-08
+
+Sprint
+
+Prompt Builder V1
+
+Status
+
+Completed
+
+---
+
+Summary
+
+Completed the production V1 Prompt Builder subsystem and validated the Context Budgeting to Prompt Builder control path against the full project regression suite.
+
+The Prompt Builder now consumes BudgetedContext and produces an immutable deterministic Prompt while preserving upstream budgeting decisions and enforcing the exact final prompt token limit.
+
+---
+
+Motivation
+
+The AI Ecosystem requires a deterministic transformation layer between Context Budgeting and future model routing or model execution.
+
+Context Budgeting determines which context fits within the available token budget.
+
+Prompt Builder converts that approved BudgetedContext into the canonical model-ready textual prompt without performing retrieval, budgeting, routing, or model execution.
+
+The implementation establishes:
+
+- Deterministic prompt construction.
+- Explicit prompt output contract.
+- Effective query propagation.
+- Fixed prompt section ordering.
+- Empty-section token overhead reduction.
+- Exact final-prompt token validation.
+- Explicit cross-layer reservation compatibility failure.
+- Stable downstream Prompt contract.
+
+---
+
+Architectural Impact
+
+Affected Layer
+
+- Prompt Builder
+- Control Plane
+
+Architecture Changed?
+
+Yes.
+
+A new production V1 Prompt Builder subsystem has been introduced.
+
+The validated control path is now:
+
+Planner
+↓
+Retriever Integration
+↓
+Retriever
+↓
+RetrievedContext
+↓
+Context Budgeting
+↓
+BudgetedContext
+↓
+Prompt Builder
+↓
+Prompt
+
+Prompt Builder consumes the canonical BudgetedContext contract and produces the canonical Prompt contract.
+
+Frozen upstream Planner, Retriever, Retriever Integration, and Context Budgeting architectures were not modified.
+
+---
+
+Implementation
+
+Files Added
+
+prompt_builder/
+
+- __init__.py
+- exceptions.py
+- prompt.py
+- prompt_builder.py
+- prompt_validator.py
+
+Tests Added
+
+tests/prompt_builder/
+
+- test_prompt.py
+- test_prompt_validator.py
+- test_prompt_builder.py
+- test_prompt_builder_pipeline.py
+
+Files Modified
+
+None.
+
+Major Classes
+
+- Prompt
+- PromptBuilder
+- PromptValidator
+
+Major APIs
+
+- PromptBuilder.build()
+- PromptValidator.validate_input()
+- PromptValidator.validate_output()
+- Prompt.to_dict()
+
+Major Contracts
+
+- BudgetedContext
+- Prompt
+
+---
+
+Key Engineering Decisions
+
+- BudgetedContext is the canonical and only Prompt Builder input.
+- BudgetedContext.effective_query is the only query authority.
+- PromptBuilder.build(BudgetedContext) produces Prompt.
+- Prompt is immutable and versioned.
+- Prompt contains only content and version.
+- Prompt section order is Knowledge → Memory → Session → Query.
+- Empty context sections are omitted.
+- Query is always emitted and always last.
+- Upstream unit order is preserved.
+- Upstream text payloads are preserved exactly.
+- Prompt Builder performs no retrieval.
+- Prompt Builder performs no budgeting.
+- Prompt Builder performs no model routing.
+- Prompt Builder performs no model execution.
+- Prompt Builder adds no system instruction in V1.
+- Exact final Prompt content is token-counted after assembly.
+- Token additivity is not assumed.
+- Final Prompt token count must not exceed total_budget.
+- Prompt overflow fails explicitly.
+- Prompt Builder never repairs overflow by changing approved content.
+- Prompt Builder remains infrastructure independent.
+- Prompt Builder depends only on the Budgeting contract and shared token-counting capability.
+
+---
+
+Validation
+
+Architecture Review
+
+PASS
+
+Implementation Review
+
+PASS
+
+Integration Review
+
+PASS
+
+Testing
+
+PASS
+
+Prompt Builder Tests
+
+64 Passed
+
+Full Project Regression
+
+313 Passed
+
+Failures
+
+0
+
+Warnings
+
+1 external ChromaDB dependency deprecation warning.
+
+No project test failure.
+
+---
+
+Performance Impact
+
+Latency
+
+No measured regression recorded.
+
+Token Usage
+
+Deterministic prompt assembly and exact final-prompt token-limit validation established.
+
+Empty context sections are omitted to avoid zero-information formatting overhead.
+
+No measured token reduction percentage is claimed.
+
+Memory Usage
+
+No measured regression recorded.
+
+CPU Usage
+
+No measured regression recorded.
+
+Quality
+
+Deterministic BudgetedContext to Prompt transformation established.
+
+No unmeasured quality improvement is claimed.
+
+---
+
+Breaking Changes
+
+None.
+
+Frozen upstream subsystem contracts were not modified.
+
+No legacy application migration has been performed.
+
+---
+
+Documentation Updated
+
+- AI_ECOSYSTEM_BOOTSTRAP.md
+- PROJECT_SNAPSHOT.md
+- CHANGELOG.md
+- PROMPT_BUILDER.md
+
+---
+
+Future Follow-up
+
+- Design Model Routing architecture.
+- Define the model selection contract.
+- Preserve Prompt as the canonical Prompt Builder output.
+- Design the new application control flow.
+- Wire validated control-plane subsystems only after downstream architecture is frozen.
+- Migrate legacy local RAG only after the new control path is validated.
+- Migrate MCP only after the new control path is validated.
+
+---
+
+Engineering Outcome
+
+Prompt Builder V1 is architecturally frozen and production validated.
+
+The validated control path is:
+
+Planner
+↓
+Retriever Integration
+↓
+Retriever
+↓
+RetrievedContext
+↓
+Context Budgeting
+↓
+BudgetedContext
+↓
+Prompt Builder
+↓
+Prompt
+
+Validated project baseline:
+
+313 passed
+0 failures
+1 external ChromaDB deprecation warning
+
+The next architectural milestone is Model Routing.
+
+---
+
+Next Milestone
+
+Version 0.6.0
+
+Model Routing
+
+---
 ---
 
 Changelog Rules
