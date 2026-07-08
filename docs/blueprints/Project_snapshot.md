@@ -28,7 +28,7 @@ Implementation continues according to the established architecture.
 
 Current Engineering Focus
 
-Prompt Builder Architecture
+Model Routing Architecture
 
 ---
 
@@ -152,7 +152,49 @@ No planned functional work.
 Architecture frozen for V1.
 
 ---
+---
 
+Prompt Builder
+
+Status
+
+Production Ready
+
+Progress
+
+100%
+
+Capabilities
+
+- BudgetedContext consumption
+- Immutable Prompt output
+- Deterministic prompt assembly
+- Fixed Knowledge → Memory → Session → Query section ordering
+- Empty-section omission
+- Effective query propagation
+- Exact upstream payload preservation
+- Exact final-prompt token validation
+- Explicit prompt overflow failure
+- Stable Prompt serialization
+- Deterministic execution
+- Infrastructure-independent prompt construction
+
+Validation
+
+- 64 Prompt Builder tests passing
+- Context Budgeting → Prompt Builder cross-layer validation passing
+- Full project regression validation passing
+- 313 project tests passing
+- 0 failures
+- 1 external ChromaDB deprecation warning
+
+Next Work
+
+No planned functional work.
+
+Architecture frozen for V1.
+
+---
 Planner
 
 Status
@@ -327,7 +369,7 @@ In Development
 
 Progress
 
-≈60%
+≈70%
 
 Completed Pipeline
 
@@ -337,15 +379,21 @@ Retriever Integration
 ↓
 Retriever
 ↓
+RetrievedContext
+↓
 Context Budgeting
+↓
+BudgetedContext
+↓
+Prompt Builder
+↓
+Prompt
 
 Current Focus
 
-Prompt Builder.
+Model Routing.
 
 Future Focus
-
-Model Routing.
 
 Tool Routing.
 
@@ -399,19 +447,19 @@ Engineering priorities should continue to follow measured bottlenecks rather tha
 
 Priority 1
 
-Design and implement Prompt Builder.
+Design and implement Model Routing.
 
 Priority 2
 
-Implement Model Routing.
+Implement Tool Routing.
 
 Priority 3
 
-Implement Tool Routing.
+Complete Control Plane orchestration.
 
 Priority 4
 
-Complete Control Plane orchestration.
+Integrate validated control-plane subsystems.
 
 Priority 5
 
@@ -444,49 +492,46 @@ These items are intentionally postponed to preserve focus on Production V1.
 
 Current Sprint
 
-Prompt Builder Architecture
+Model Routing Architecture
 
 Primary Deliverables
 
-- Prompt Builder architecture
-- Prompt input contract
-- BudgetedContext consumption rules
-- Deterministic prompt assembly
-- Prompt validation strategy
-- Prompt Builder tests
+- Model Router architecture
+- Model selection contract
+- ExecutionPlan consumption rules
+- Model capability representation
+- Deterministic routing policy
+- Routing validation strategy
+- Model Router tests
 - Acceptance criteria
 
 Success Criteria
 
-- BudgetedContext remains the canonical context input.
-- Prompt construction is deterministic.
-- Budgeting decisions are not reinterpreted.
-- Retrieval is not performed inside Prompt Builder.
-- Prompt Builder does not modify upstream domain contracts.
-- Prompt output contract is explicit and immutable.
-- Existing 249-test project baseline has no regression.
+- Frozen upstream contracts remain unchanged.
+- Model selection is deterministic.
+- Prompt Builder responsibilities are not reinterpreted.
+- Model execution is not performed inside Model Router.
+- Routing policy is explicit and testable.
+- Model routing remains infrastructure independent.
+- Existing 313-test project baseline has no regression.
 
 ---
 
 9.7 Next Architectural Milestones
 
-1. Prompt Builder
+1. Model Routing
 
 ↓
 
-2. Model Routing
+2. Tool Routing
 
 ↓
 
-3. Tool Routing
+3. Control Plane Completion
 
 ↓
 
-4. Control Plane Completion
-
-↓
-
-5. Production V1
+4. Production V1
 
 ---
 
@@ -498,10 +543,10 @@ No critical architectural risks identified.
 
 Current implementation risks
 
-- Prompt Builder reinterpreting Budgeting decisions.
-- Prompt assembly introducing hidden token growth.
-- Coupling Prompt Builder to retrieval or infrastructure.
-- Duplicating budgeting responsibility inside prompt construction.
+- Model Router reinterpreting Planner or Prompt Builder responsibilities.
+- Coupling model selection to provider infrastructure.
+- Introducing nondeterministic routing policy.
+- Mixing model selection with model execution.
 - Breaking deterministic upstream contracts.
 
 Mitigation

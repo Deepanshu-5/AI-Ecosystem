@@ -136,19 +136,19 @@ Production V1 Development.
 
 Current Focus
 
-Prompt Builder Architecture.
+Model Routing Architecture.
 
 Current Highest Priority
 
-Design and implement the Prompt Builder Layer that consumes BudgetedContext and produces deterministic prompt input for downstream model execution.
+Design the Model Routing Layer that deterministically selects model execution requirements without performing model execution or redesigning frozen upstream subsystems.
 
 Current Major Milestone
 
-Retriever Integration and Context Budgeting V1 completed and validated.
+Prompt Builder V1 completed and validated.
 
 Next Milestone
 
-Production-ready Prompt Builder.
+Production-ready Model Routing.
 
 
 ---
@@ -293,24 +293,23 @@ Cold model loading.
 Do not optimize retrieval without new measurements.
 
 ---
-
 Current Sprint
 
-Prompt Builder Architecture
+Model Routing Architecture
 
 Current Deliverables
 
-- Prompt Builder architecture design
-- Prompt input contract definition
-- BudgetedContext consumption rules
-- Deterministic prompt assembly rules
-- Prompt Builder validation strategy
-- Prompt Builder testing and acceptance criteria
+- Model Router architecture design
+- Model selection contract definition
+- ExecutionPlan consumption rules
+- Model capability representation
+- Deterministic routing policy
+- Model Router validation strategy
+- Model Router testing and acceptance criteria
 
-The Planner, Retriever, Retriever Integration, and Context Budgeting V1 have been completed and validated.
+The Planner, Retriever, Retriever Integration, Context Budgeting, and Prompt Builder V1 subsystems have been completed and validated.
 
 These completed subsystems are considered architecturally frozen. Future changes are limited to bug fixes, documentation corrections, and explicitly approved backward-compatible improvements.
-
 ---
 ---
 
@@ -402,12 +401,59 @@ Current Status
 
 Production Ready (V1)
 
-The Context Budgeting Layer now consumes RetrievedContext and produces deterministic BudgetedContext for the future Prompt Builder.
+The Context Budgeting Layer consumes RetrievedContext and produces deterministic BudgetedContext for Prompt Builder.
 
 Validation Baseline
 
-249 project tests passing.
+313 project tests passing.
 
+0 failures.
+
+1 external ChromaDB deprecation warning.
+---
+---
+
+Prompt Builder Status
+
+The Prompt Builder subsystem has been completed and validated.
+
+Completed Components
+
+- Prompt
+- PromptBuilder
+- PromptValidator
+- Prompt Builder exceptions
+- Deterministic Knowledge assembly
+- Deterministic Memory assembly
+- Deterministic Session assembly
+- Effective query propagation
+- Fixed prompt section ordering
+- Empty-section omission
+- Exact final-prompt token validation
+- Stable Prompt serialization
+
+Verification
+
+- Unit tested
+- Validation tested
+- Cross-layer tested
+- Full project regression tested
+
+Current Status
+
+Production Ready (V1)
+
+The Prompt Builder now consumes BudgetedContext and produces an immutable deterministic Prompt for future downstream Model Routing and model execution.
+
+Validation Baseline
+
+313 project tests passing.
+
+0 failures.
+
+1 external ChromaDB deprecation warning.
+
+---
 ---
 
 AI Collaboration Instructions
@@ -444,10 +490,12 @@ A contributor should also be able to:
 - Understand the completed Planner subsystem.
 - Understand the completed Retriever and Retriever Integration subsystems.
 - Understand the completed Context Budgeting V1 subsystem.
+- Understand the completed Prompt Builder V1 subsystem.
 - Preserve ExecutionPlan as the Planner control contract.
 - Preserve RetrievedContext as the canonical retrieval output contract.
 - Preserve BudgetedContext as the canonical budgeting output contract.
-- Continue development from the Prompt Builder milestone without redesigning completed upstream subsystems.
+- Preserve Prompt as the canonical Prompt Builder output contract.
+- Continue development from the Model Routing milestone without redesigning completed upstream subsystems.
 
 This document is the official onboarding entry point for the AI Ecosystem.                             
 # Bootstrap Instructions      
