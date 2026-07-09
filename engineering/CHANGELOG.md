@@ -1078,6 +1078,353 @@ Version 0.6.0
 Model Routing
 
 ---
+
+---
+
+Version
+
+0.6.0
+
+Release Date
+
+2026-07-09
+
+Sprint
+
+Model Routing V1
+
+Status
+
+Completed
+
+---
+
+Summary
+
+Completed the production V1 Model Routing subsystem and validated the Planner-to-Model-Router decision branch against the full project regression suite.
+
+The Model Router now consumes ExecutionPlan and deterministically produces an immutable ModelRoute containing a semantic model capability target.
+
+---
+
+Motivation
+
+The AI Ecosystem requires a deterministic model-selection decision before future model execution.
+
+The Planner already determines query purpose and execution complexity.
+
+Model Routing consumes that Planner decision and selects the required semantic model capability without reinterpreting query text, inspecting Prompt content, resolving concrete model names, or performing model execution.
+
+The implementation establishes:
+
+* Deterministic model-target selection.
+* Explicit semantic model capability targets.
+* Infrastructure-independent routing.
+* Planner-owned complexity authority.
+* Immutable routing output.
+* Explicit routing invariant validation.
+* Stable downstream ModelRoute contract.
+* A scalable boundary for future target-to-runtime model resolution.
+
+---
+
+Architectural Impact
+
+Affected Layer
+
+* Model Routing
+* Control Plane
+
+Architecture Changed?
+
+Yes.
+
+A new production V1 Model Routing subsystem has been introduced.
+
+Model Routing is a parallel decision branch originating from ExecutionPlan.
+
+The validated architecture now contains:
+
+ExecutionPlan
+↓
+Model Router
+↓
+ModelRoute
+
+The existing context and prompt path remains:
+
+Planner
+↓
+ExecutionPlan
+↓
+Retriever Integration
+↓
+Retriever
+↓
+RetrievedContext
+↓
+Context Budgeting
+↓
+BudgetedContext
+↓
+Prompt Builder
+↓
+Prompt
+
+Future model execution will consume Prompt and ModelRoute.
+
+Frozen upstream Planner, Retriever, Retriever Integration, Context Budgeting, and Prompt Builder architectures were not modified.
+
+---
+
+Implementation
+
+Files Added
+
+routing/
+
+* **init**.py
+* exceptions.py
+* model_target.py
+* model_route.py
+* model_router.py
+* model_routing_validator.py
+
+Tests Added
+
+tests/routing/
+
+* test_model_target.py
+* test_model_route.py
+* test_model_routing_validator.py
+* test_model_router.py
+* test_model_router_pipeline.py
+
+Files Modified
+
+None in production upstream subsystems.
+
+Major Classes
+
+* ModelTarget
+* ModelRoute
+* ModelRouter
+* ModelRoutingValidator
+
+Major APIs
+
+* ModelRouter.route()
+* ModelRoutingValidator.validate_input()
+* ModelRoutingValidator.validate_output()
+* ModelRoutingValidator.validate_routing_invariant()
+* ModelRoute.to_dict()
+
+Major Contracts
+
+* ExecutionPlan
+* ModelTarget
+* ModelRoute
+
+---
+
+Key Engineering Decisions
+
+* ExecutionPlan is the only Model Router input contract in V1.
+* ExecutionPlan.complexity is the only target-selection authority in V1.
+* Complexity.LOW routes to ModelTarget.LIGHTWEIGHT.
+* Complexity.MEDIUM routes to ModelTarget.STANDARD.
+* Complexity.HIGH routes to ModelTarget.ADVANCED.
+* ProcessingGoal is validated at the routing boundary but does not alter V1 target selection.
+* ModelTarget represents semantic model capability rather than provider or deployment identity.
+* ModelRoute is immutable and versioned.
+* ModelRoute contains only target, reason, and version.
+* Routing reason strings are deterministic.
+* Model Routing does not inspect Prompt content.
+* Model Routing does not accept raw query text.
+* Model Routing does not reinterpret Planner decisions.
+* Model Routing does not resolve concrete model names.
+* Model Routing does not depend on model providers or infrastructure.
+* Model Routing performs no model execution.
+* Invalid routing state fails explicitly.
+* No default route or fallback route exists in V1.
+* Routing invariant validation enforces exact complexity-to-target consistency.
+* ExecutionPlan and nested Planner contracts are never mutated.
+
+---
+
+Validation
+
+Architecture Review
+
+PASS
+
+Implementation Review
+
+PASS
+
+Integration Review
+
+PASS
+
+Testing
+
+PASS
+
+Model Routing Tests
+
+61 Passed
+
+Planner Tests
+
+52 Passed
+
+Retriever Tests
+
+84 Passed
+
+Integration Tests
+
+48 Passed
+
+Context Budgeting Tests
+
+65 Passed
+
+Prompt Builder Tests
+
+64 Passed
+
+Full Project Regression
+
+374 Passed
+
+Failures
+
+0
+
+Warnings
+
+1 external ChromaDB dependency deprecation warning.
+
+No project-owned warning introduced.
+
+No project test failure.
+
+---
+
+Performance Impact
+
+Latency
+
+No measured routing latency benchmark recorded.
+
+Token Usage
+
+No measured token reduction percentage is claimed for Model Routing V1.
+
+The subsystem establishes the semantic model-selection boundary required for future model-capability-based token and inference optimization.
+
+Memory Usage
+
+No measured regression recorded.
+
+CPU Usage
+
+No measured regression recorded.
+
+Quality
+
+Deterministic complexity-to-model-target selection established.
+
+No unmeasured quality improvement is claimed.
+
+---
+
+Breaking Changes
+
+None.
+
+Frozen upstream subsystem contracts were not modified.
+
+No legacy application migration has been performed.
+
+No concrete runtime model binding has been introduced.
+
+---
+
+Documentation Updated
+
+* AI_ECOSYSTEM_BOOTSTRAP.md
+* PROJECT_SNAPSHOT.md
+* CHANGELOG.md
+* MODEL_ROUTING.md
+* AI_ECOSYSTEM_FILE_MANIFEST.json
+
+---
+
+Future Follow-up
+
+* Design Tool Routing architecture.
+* Define the tool-selection contract.
+* Preserve ExecutionPlan as the Planner control contract.
+* Preserve ModelRoute as the canonical Model Routing output.
+* Design future Model Execution Integration.
+* Define semantic ModelTarget to runtime-model binding outside Model Routing.
+* Complete Control Plane orchestration only after downstream architecture is frozen.
+* Migrate legacy local RAG only after the new control path is validated.
+* Migrate MCP only after the new control path is validated.
+
+---
+
+Engineering Outcome
+
+Model Routing V1 is architecturally frozen and production validated.
+
+The validated context and prompt path is:
+
+Planner
+↓
+ExecutionPlan
+↓
+Retriever Integration
+↓
+Retriever
+↓
+RetrievedContext
+↓
+Context Budgeting
+↓
+BudgetedContext
+↓
+Prompt Builder
+↓
+Prompt
+
+The validated Model Routing decision branch is:
+
+ExecutionPlan
+↓
+Model Router
+↓
+ModelRoute
+
+Validated project baseline:
+
+374 passed
+0 failures
+1 external ChromaDB deprecation warning
+
+The next architectural milestone is Tool Routing.
+
+---
+
+Next Milestone
+
+Version 0.7.0
+
+Tool Routing
+
+---
 ---
 
 Changelog Rules
