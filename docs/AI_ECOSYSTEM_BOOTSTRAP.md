@@ -123,12 +123,11 @@ These documents together form the canonical source of truth.
 Source code should never replace these documents as the primary architectural reference.
 
 ---
-
 Current Project Status
 
 Overall Progress
 
-Approximately 90%.
+Approximately 92%.
 
 Current Phase
 
@@ -136,44 +135,55 @@ Production V1 Development.
 
 Current Focus
 
-Model Routing Architecture.
+Tool Routing Architecture.
 
 Current Highest Priority
 
-Design the Model Routing Layer that deterministically selects model execution requirements without performing model execution or redesigning frozen upstream subsystems.
+Design the Tool Routing Layer with explicit tool-selection ownership, deterministic routing boundaries, and no duplication of Planner, Model Routing, or tool-execution responsibilities.
 
 Current Major Milestone
 
-Prompt Builder V1 completed and validated.
+Model Routing V1 completed, validated, and architecturally frozen.
 
 Next Milestone
 
-Production-ready Model Routing.
-
+Production-ready Tool Routing.
 
 ---
-
 Current Architecture
 
 Implemented
 
-- Knowledge Layer
-- Memory Layer
-- Session Layer
-- Context Budgeting
-- MCP Integration
-- Engineering Governance
+* Knowledge Layer
+* Memory Layer
+* Session Layer
+* Context Budgeting
+* Prompt Builder
+* Model Routing
+* MCP Integration
+* Engineering Governance
 
-Architecture Complete
+Architecture Complete and Frozen for V1
 
-- Planner
-- Model Routing
-- Tool Routing
+* Planner
+* Retriever
+* Retriever Integration
+* Context Budgeting
+* Prompt Builder
+* Model Routing
 
 Production Ready
 
-- Planner
-- Retriever
+* Planner
+* Retriever
+* Retriever Integration
+* Context Budgeting
+* Prompt Builder
+* Model Routing
+
+Current Architecture Target
+
+* Tool Routing
 
 Deferred
 
@@ -295,21 +305,23 @@ Do not optimize retrieval without new measurements.
 ---
 Current Sprint
 
-Model Routing Architecture
+Tool Routing Architecture
 
 Current Deliverables
 
-- Model Router architecture design
-- Model selection contract definition
-- ExecutionPlan consumption rules
-- Model capability representation
-- Deterministic routing policy
-- Model Router validation strategy
-- Model Router testing and acceptance criteria
+* Tool Router architecture design
+* Tool-selection contract definition
+* ExecutionPlan consumption analysis
+* Tool capability representation analysis
+* Deterministic routing policy design
+* Tool Routing ownership boundaries
+* Tool Router validation strategy
+* Tool Router testing and acceptance criteria
 
-The Planner, Retriever, Retriever Integration, Context Budgeting, and Prompt Builder V1 subsystems have been completed and validated.
+The Planner, Retriever, Retriever Integration, Context Budgeting, Prompt Builder, and Model Routing V1 subsystems have been completed and validated.
 
 These completed subsystems are considered architecturally frozen. Future changes are limited to bug fixes, documentation corrections, and explicitly approved backward-compatible improvements.
+
 ---
 ---
 
@@ -405,7 +417,7 @@ The Context Budgeting Layer consumes RetrievedContext and produces deterministic
 
 Validation Baseline
 
-313 project tests passing.
+374 project tests passing.
 
 0 failures.
 
@@ -443,16 +455,78 @@ Current Status
 
 Production Ready (V1)
 
-The Prompt Builder now consumes BudgetedContext and produces an immutable deterministic Prompt for future downstream Model Routing and model execution.
+The Prompt Builder consumes BudgetedContext and produces an immutable deterministic Prompt for future Model Execution Integration.
+
+Model Routing does not consume or inspect Prompt. It operates as a parallel decision branch from ExecutionPlan.
 
 Validation Baseline
 
-313 project tests passing.
+374 project tests passing.
 
 0 failures.
 
 1 external ChromaDB deprecation warning.
 
+---
+
+---
+
+Model Routing Status
+
+The Model Routing subsystem has been completed and validated.
+
+Completed Components
+
+* ModelTarget
+* ModelRoute
+* ModelRouter
+* ModelRoutingValidator
+* Model Routing exceptions
+* Deterministic complexity-to-target routing
+* LIGHTWEIGHT semantic capability target
+* STANDARD semantic capability target
+* ADVANCED semantic capability target
+* ProcessingGoal boundary validation
+* Complexity-to-target invariant validation
+* Deterministic routing reasons
+* Stable ModelRoute serialization
+* Planner-to-Model-Router pipeline validation
+
+Verification
+
+* 61 Model Routing tests passing
+* Unit tested
+* Validation tested
+* Determinism tested
+* Non-mutation tested
+* Planner cross-layer tested
+* Full project regression tested
+
+Current Status
+
+Production Ready (V1)
+
+The Model Router consumes ExecutionPlan and produces an immutable deterministic ModelRoute.
+
+ExecutionPlan.complexity is the only V1 target-selection authority.
+
+The V1 routing policy is:
+
+LOW → LIGHTWEIGHT
+
+MEDIUM → STANDARD
+
+HIGH → ADVANCED
+
+Model Routing does not inspect Prompt, resolve concrete model names, select providers, or perform model execution.
+
+Validation Baseline
+
+374 project tests passing.
+
+0 failures.
+
+1 external ChromaDB deprecation warning.
 ---
 ---
 
@@ -487,15 +561,19 @@ After reading this document and the canonical engineering documents, a contribut
 
 A contributor should also be able to:
 
-- Understand the completed Planner subsystem.
-- Understand the completed Retriever and Retriever Integration subsystems.
-- Understand the completed Context Budgeting V1 subsystem.
-- Understand the completed Prompt Builder V1 subsystem.
-- Preserve ExecutionPlan as the Planner control contract.
-- Preserve RetrievedContext as the canonical retrieval output contract.
-- Preserve BudgetedContext as the canonical budgeting output contract.
-- Preserve Prompt as the canonical Prompt Builder output contract.
-- Continue development from the Model Routing milestone without redesigning completed upstream subsystems.
+* Understand the completed Planner subsystem.
+* Understand the completed Retriever and Retriever Integration subsystems.
+* Understand the completed Context Budgeting V1 subsystem.
+* Understand the completed Prompt Builder V1 subsystem.
+* Understand the completed Model Routing V1 subsystem.
+* Preserve ExecutionPlan as the Planner control contract.
+* Preserve RetrievedContext as the canonical retrieval output contract.
+* Preserve BudgetedContext as the canonical budgeting output contract.
+* Preserve Prompt as the canonical Prompt Builder output contract.
+* Preserve ModelRoute as the canonical Model Routing output contract.
+* Preserve Model Routing as a parallel decision branch from ExecutionPlan.
+* Continue development from the Tool Routing milestone without redesigning completed upstream subsystems.
+
 
 This document is the official onboarding entry point for the AI Ecosystem.                             
 # Bootstrap Instructions      

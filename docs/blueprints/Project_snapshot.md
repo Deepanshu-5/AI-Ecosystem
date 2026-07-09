@@ -28,7 +28,7 @@ Implementation continues according to the established architecture.
 
 Current Engineering Focus
 
-Model Routing Architecture
+Tool Routing Architecture
 
 ---
 
@@ -297,21 +297,51 @@ No planned functional work.
 Architecture frozen for V1.
 
 ---
+
 Model Routing
 
 Status
 
-Architecture Complete
-
-Implementation Deferred
+Production Ready
 
 Progress
 
-≈40%
+100%
 
-Dependency
+Capabilities
 
-Planner completion.
+* Deterministic ExecutionPlan consumption
+* Complexity-based semantic model-target selection
+* ModelTarget capability abstraction
+* Immutable ModelRoute generation
+* LOW → LIGHTWEIGHT routing
+* MEDIUM → STANDARD routing
+* HIGH → ADVANCED routing
+* ProcessingGoal boundary validation
+* Complexity-to-target invariant validation
+* Deterministic routing reasons
+* Stable ModelRoute serialization
+* Input non-mutation
+* Infrastructure-independent routing
+* Planner-to-Model-Router cross-layer validation
+
+Validation
+
+* 61 Model Routing tests passing
+* 52 Planner tests passing
+* Planner-to-Model-Router pipeline validation passing
+* Full project regression validation passing
+* 374 project tests passing
+* 0 failures
+* 1 external ChromaDB deprecation warning
+
+Next Work
+
+No planned functional work.
+
+Future target-to-runtime model binding belongs to Model Execution Integration.
+
+Architecture frozen for V1.
 
 ---
 
@@ -369,11 +399,13 @@ In Development
 
 Progress
 
-≈70%
+≈75%
 
-Completed Pipeline
+Validated Context and Prompt Path
 
 Planner
+↓
+ExecutionPlan
 ↓
 Retriever Integration
 ↓
@@ -389,13 +421,21 @@ Prompt Builder
 ↓
 Prompt
 
+Validated Model Routing Branch
+
+ExecutionPlan
+↓
+Model Router
+↓
+ModelRoute
+
 Current Focus
 
-Model Routing.
+Tool Routing.
 
 Future Focus
 
-Tool Routing.
+Model Execution Integration.
 
 Execution policies.
 
@@ -447,11 +487,11 @@ Engineering priorities should continue to follow measured bottlenecks rather tha
 
 Priority 1
 
-Design and implement Model Routing.
+Design and implement Tool Routing.
 
 Priority 2
 
-Implement Tool Routing.
+Design Model Execution Integration.
 
 Priority 3
 
@@ -487,43 +527,43 @@ Deferred items include:
 These items are intentionally postponed to preserve focus on Production V1.
 
 ---
-
 9.6 Immediate Sprint
 
 Current Sprint
 
-Model Routing Architecture
+Tool Routing Architecture
 
 Primary Deliverables
 
-- Model Router architecture
-- Model selection contract
-- ExecutionPlan consumption rules
-- Model capability representation
-- Deterministic routing policy
-- Routing validation strategy
-- Model Router tests
-- Acceptance criteria
+* Tool Router architecture
+* Tool-selection contract
+* ExecutionPlan consumption rules
+* Tool capability representation
+* Deterministic routing policy
+* Tool Routing ownership boundaries
+* Tool Routing validation strategy
+* Tool Router testing architecture
+* Acceptance criteria
 
 Success Criteria
 
-- Frozen upstream contracts remain unchanged.
-- Model selection is deterministic.
-- Prompt Builder responsibilities are not reinterpreted.
-- Model execution is not performed inside Model Router.
-- Routing policy is explicit and testable.
-- Model routing remains infrastructure independent.
-- Existing 313-test project baseline has no regression.
+* Frozen upstream contracts remain unchanged.
+* Tool-selection ownership is explicit.
+* Planner decisions are not reinterpreted.
+* Model Routing responsibilities are not duplicated.
+* Tool execution is not performed inside Tool Router.
+* Tool routing policy is explicit and testable.
+* Tool Routing remains infrastructure independent.
+* Existing 374-test project baseline has no regression.
 
 ---
-
 9.7 Next Architectural Milestones
 
-1. Model Routing
+1. Tool Routing
 
 ↓
 
-2. Tool Routing
+2. Model Execution Integration
 
 ↓
 
@@ -532,7 +572,6 @@ Success Criteria
 ↓
 
 4. Production V1
-
 ---
 
 9.8 Risks
@@ -543,10 +582,11 @@ No critical architectural risks identified.
 
 Current implementation risks
 
-- Model Router reinterpreting Planner or Prompt Builder responsibilities.
-- Coupling model selection to provider infrastructure.
-- Introducing nondeterministic routing policy.
-- Mixing model selection with model execution.
+- Tool Router reinterpreting Planner decisions.
+- Duplicating Model Routing responsibilities.
+- Coupling tool selection to tool infrastructure or execution.
+- Introducing nondeterministic tool-routing policy.
+- Mixing tool selection with tool execution.
 - Breaking deterministic upstream contracts.
 
 Mitigation
