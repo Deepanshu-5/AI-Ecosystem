@@ -1417,12 +1417,406 @@ Validated project baseline:
 The next architectural milestone is Tool Routing.
 
 ---
-
 Next Milestone
 
 Version 0.7.0
 
 Tool Routing
+
+---
+
+---
+
+Version
+
+0.7.0
+
+Release Date
+
+2026-07-10
+
+Sprint
+
+Tool Routing V1
+
+Status
+
+Completed
+
+---
+
+Summary
+
+Completed the production V1 Tool Routing subsystem and validated the Planner-to-Tool-Router decision branch against the full project regression suite.
+
+The Tool Router now consumes ExecutionPlan and deterministically produces an immutable ToolRoute containing the semantic information-access capabilities required by the Planner resource decision.
+
+---
+
+Motivation
+
+The AI Ecosystem requires explicit tool-selection decisions before future runtime tool binding and tool execution.
+
+The Planner already determines whether knowledge, memory, and session resources are required.
+
+Tool Routing consumes that Planner decision and selects semantic information-access capabilities without reinterpreting raw query text, parsing DecisionTrace, inspecting MCP exposure, resolving concrete runtime tools, or performing tool execution.
+
+The implementation establishes:
+
+* Deterministic semantic tool-capability selection.
+* Explicit information-access capability contracts.
+* Infrastructure-independent routing.
+* Planner-owned resource-requirement authority.
+* Immutable routing output.
+* Explicit routing invariant validation.
+* Stable downstream ToolRoute contract.
+* A scalable boundary for future capability-to-runtime tool binding.
+
+---
+
+Architectural Impact
+
+Affected Layer
+
+* Tool Routing
+* Control Plane
+
+Architecture Changed?
+
+Yes.
+
+A new production V1 Tool Routing subsystem has been introduced.
+
+Tool Routing is an independent parallel decision branch originating from ExecutionPlan.
+
+The validated Tool Routing branch is:
+
+ExecutionPlan
+↓
+ToolRouter
+↓
+ToolRoute
+
+The validated Model Routing branch remains:
+
+ExecutionPlan
+↓
+Model Router
+↓
+ModelRoute
+
+The existing context and prompt path remains:
+
+Planner
+↓
+ExecutionPlan
+↓
+Retriever Integration
+↓
+Retriever
+↓
+RetrievedContext
+↓
+Context Budgeting
+↓
+BudgetedContext
+↓
+Prompt Builder
+↓
+Prompt
+
+Tool Routing does not execute tools and does not resolve semantic capabilities to runtime tool implementations.
+
+Future semantic capability-to-runtime tool binding belongs to Tool Execution Integration.
+
+Future coordination of Prompt, ModelRoute, and ToolRoute belongs to Control Plane orchestration.
+
+Frozen upstream Planner, Retriever, Retriever Integration, Context Budgeting, Prompt Builder, and Model Routing architectures were not modified.
+
+---
+
+Implementation
+
+Files Added
+
+routing/
+
+* tool_capability.py
+* tool_route.py
+* tool_router.py
+* tool_routing_validator.py
+
+Tests Added
+
+tests/routing/
+
+* test_tool_capability.py
+* test_tool_route.py
+* test_tool_routing_validator.py
+* test_tool_router.py
+* test_tool_router_pipeline.py
+
+Files Modified
+
+routing/
+
+* **init**.py
+* exceptions.py
+
+No frozen upstream production subsystem was modified.
+
+---
+
+Major Classes
+
+* ToolCapability
+* ToolRoute
+* ToolRouter
+* ToolRoutingValidator
+
+Major APIs
+
+* ToolRouter.route()
+* ToolRoutingValidator.validate_input()
+* ToolRoutingValidator.validate_output()
+* ToolRoutingValidator.validate_routing_invariant()
+* ToolRoute.to_dict()
+
+Major Contracts
+
+* ExecutionPlan
+* ResourceRequirements
+* ToolCapability
+* ToolRoute
+
+---
+
+Key Engineering Decisions
+
+* ExecutionPlan is the canonical and only Tool Router input.
+* ExecutionPlan.resource_requirements is the only capability-selection authority in V1.
+* knowledge=True routes to ToolCapability.KNOWLEDGE_ACCESS.
+* memory=True routes to ToolCapability.MEMORY_ACCESS.
+* session=True routes to ToolCapability.SESSION_ACCESS.
+* All resource requirements false produce an explicit empty capability tuple.
+* ToolCapability represents semantic information-access capability rather than MCP identity, Python function identity, provider identity, or runtime implementation.
+* ToolRoute is immutable and versioned.
+* ToolRoute contains only capabilities, reason, and version.
+* Capability order is canonical: knowledge, memory, session.
+* All eight knowledge, memory, and session requirement states are explicitly routed.
+* Routing reason strings are exact and deterministic.
+* ProcessingGoal is validated at the routing boundary but does not alter V1 capability selection.
+* Complexity does not alter Tool Routing.
+* DecisionTrace does not alter Tool Routing.
+* Tool Routing does not inspect raw query text.
+* Tool Routing does not reinterpret Planner decisions.
+* Tool Routing does not inspect MCP tools or exposure.
+* Tool Routing does not discover or register tools.
+* Tool Routing does not resolve runtime tool implementations.
+* Tool Routing does not construct tool arguments.
+* Tool Routing performs no tool execution.
+* Tool Routing does not inspect runtime availability, CPU, RAM, network, latency, cost, or environment state.
+* Tool Routing does not depend on configuration-driven, adaptive, probabilistic, or learned routing policy.
+* Invalid routing state fails explicitly.
+* No default route or fallback route exists in V1.
+* Routing invariant validation enforces exact ResourceRequirements-to-capability equivalence.
+* ExecutionPlan and nested Planner contracts are never mutated.
+* Memory-write, session-write/process, health/probe, code execution, document-processing, and provider-search action routing remain outside the V1 Tool Routing capability contract.
+
+---
+
+Validation
+
+Architecture Review
+
+PASS
+
+Implementation Review
+
+PASS
+
+External File-by-File Review
+
+PASS
+
+Cross-Layer Review
+
+PASS
+
+Testing
+
+PASS
+
+Planner-to-Tool-Router Pipeline
+
+10 Passed
+
+Routing Subsystem
+
+134 Passed
+
+Full Project Regression
+
+447 Passed
+
+Failures
+
+0
+
+Warnings
+
+1 external ChromaDB dependency deprecation warning.
+
+No project-owned warning introduced.
+
+No project test failure.
+
+---
+
+Validation Correction
+
+During external implementation review, the Planner-to-Tool-Router pipeline test contained a memory-write-oriented query used as a representative memory-access fixture.
+
+The production Tool Routing implementation was correct.
+
+The Planner was not modified.
+
+The Tool Router was not modified.
+
+The test fixture was corrected to use an existing Planner-recognized memory-access query whose actual ResourceRequirements state is memory-only.
+
+The corrected Planner-to-Tool-Router pipeline passed 10 tests.
+
+The Routing subsystem passed 134 tests.
+
+The full project regression passed 447 tests with zero failures.
+
+---
+
+Performance Impact
+
+Latency
+
+No measured Tool Routing latency benchmark recorded.
+
+Token Usage
+
+No measured token reduction percentage is claimed for Tool Routing V1.
+
+The subsystem establishes the semantic capability-selection boundary required to avoid unnecessary future runtime tool binding and execution.
+
+Memory Usage
+
+No measured regression recorded.
+
+CPU Usage
+
+No measured regression recorded.
+
+Quality
+
+Deterministic ResourceRequirements-to-ToolRoute transformation established.
+
+Exact routing invariants and exhaustive eight-state policy validation established.
+
+No unmeasured quality improvement is claimed.
+
+---
+
+Breaking Changes
+
+None.
+
+Frozen upstream subsystem contracts were not modified.
+
+No legacy application migration has been performed.
+
+No concrete runtime tool binding has been introduced.
+
+No MCP migration has been performed.
+
+---
+
+Documentation Updated
+
+* AI_ECOSYSTEM_BOOTSTRAP.md
+* PROJECT_SNAPSHOT.md
+* CHANGELOG.md
+* TOOL_ROUTING.md
+* AI_ECOSYSTEM_FILE_MANIFEST.json
+
+---
+
+Future Follow-up
+
+* Design Model Execution Integration architecture.
+* Preserve Prompt as the canonical Prompt Builder output.
+* Preserve ModelRoute as the canonical Model Routing output.
+* Define semantic ModelTarget to runtime-model binding outside Model Routing.
+* Design Tool Execution Integration architecture.
+* Preserve ToolRoute as the canonical Tool Routing output.
+* Define semantic ToolCapability to runtime-tool binding outside Tool Routing.
+* Complete Control Plane orchestration only after execution integration boundaries are frozen.
+* Migrate legacy local RAG only after the new control path is validated.
+* Migrate MCP only after the new control path is validated.
+
+---
+
+Engineering Outcome
+
+Tool Routing V1 is architecturally frozen and production validated.
+
+The validated context and prompt path is:
+
+Planner
+↓
+ExecutionPlan
+↓
+Retriever Integration
+↓
+Retriever
+↓
+RetrievedContext
+↓
+Context Budgeting
+↓
+BudgetedContext
+↓
+Prompt Builder
+↓
+Prompt
+
+The validated Model Routing decision branch is:
+
+ExecutionPlan
+↓
+Model Router
+↓
+ModelRoute
+
+The validated Tool Routing decision branch is:
+
+ExecutionPlan
+↓
+ToolRouter
+↓
+ToolRoute
+
+Validated project baseline:
+
+447 passed
+0 failures
+1 external ChromaDB deprecation warning
+
+The next architectural milestone is Model Execution Integration.
+
+---
+
+Next Milestone
+
+Version 0.8.0
+
+Model Execution Integration
 
 ---
 ---
