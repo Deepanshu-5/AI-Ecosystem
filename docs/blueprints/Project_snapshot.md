@@ -344,23 +344,54 @@ Future target-to-runtime model binding belongs to Model Execution Integration.
 Architecture frozen for V1.
 
 ---
-
 Tool Routing
 
 Status
 
-Architecture Complete
-
-Implementation Deferred
+Production Ready
 
 Progress
 
-≈30%
+100%
 
-Dependency
+Capabilities
 
-Planner completion.
+* Deterministic ExecutionPlan consumption
+* ResourceRequirements-based semantic capability selection
+* ToolCapability semantic capability abstraction
+* Immutable ToolRoute generation
+* knowledge=True → KNOWLEDGE_ACCESS routing
+* memory=True → MEMORY_ACCESS routing
+* session=True → SESSION_ACCESS routing
+* Explicit no-capability route
+* Exact eight-state deterministic routing policy
+* Canonical capability ordering
+* ProcessingGoal boundary validation
+* Requirement-to-capability invariant validation
+* Exact deterministic routing reasons
+* Stable ToolRoute serialization
+* Input non-mutation
+* Infrastructure-independent routing
+* Planner-to-Tool-Router cross-layer validation
 
+Validation
+
+* Planner-to-Tool-Router pipeline: 10 tests passing
+* 134 Routing tests passing
+* Full project regression validation passing
+* 447 project tests passing
+* 0 failures
+* 1 external ChromaDB deprecation warning
+
+Next Work
+
+No planned functional work.
+
+Future semantic capability-to-runtime tool binding belongs to Tool Execution Integration.
+
+Architecture frozen for V1.
+
+---
 ---
 
 Observability
@@ -399,7 +430,7 @@ In Development
 
 Progress
 
-≈75%
+≈85%
 
 Validated Context and Prompt Path
 
@@ -429,18 +460,25 @@ Model Router
 ↓
 ModelRoute
 
+Validated Tool Routing Branch
+
+ExecutionPlan
+↓
+ToolRouter
+↓
+ToolRoute
+
 Current Focus
 
-Tool Routing.
+Model Execution Integration.
 
 Future Focus
 
-Model Execution Integration.
+Tool Execution Integration.
 
 Execution policies.
 
 Control Plane orchestration.
-
 ---
 
 9.3 Current Performance
@@ -482,16 +520,15 @@ Model loading.
 Engineering priorities should continue to follow measured bottlenecks rather than assumptions.
 
 ---
-
 9.4 Current Priorities
 
 Priority 1
 
-Design and implement Tool Routing.
+Design Model Execution Integration.
 
 Priority 2
 
-Design Model Execution Integration.
+Design Tool Execution Integration.
 
 Priority 3
 
@@ -504,7 +541,6 @@ Integrate validated control-plane subsystems.
 Priority 5
 
 Expand Observability and Evaluation.
-
 ---
 
 No new infrastructure should be introduced until the control plane reaches Production V1.
@@ -531,39 +567,43 @@ These items are intentionally postponed to preserve focus on Production V1.
 
 Current Sprint
 
-Tool Routing Architecture
+Model Execution Integration Architecture
 
 Primary Deliverables
 
-* Tool Router architecture
-* Tool-selection contract
-* ExecutionPlan consumption rules
-* Tool capability representation
-* Deterministic routing policy
-* Tool Routing ownership boundaries
-* Tool Routing validation strategy
-* Tool Router testing architecture
+* Model Execution Integration architecture
+* ModelRoute consumption analysis
+* Prompt consumption analysis
+* Semantic ModelTarget to runtime-model binding ownership
+* Runtime model resolution boundary
+* Model execution ownership boundary
+* Provider and infrastructure dependency analysis
+* Execution failure boundary analysis
+* Validation strategy
+* Testing architecture
 * Acceptance criteria
 
 Success Criteria
 
 * Frozen upstream contracts remain unchanged.
-* Tool-selection ownership is explicit.
-* Planner decisions are not reinterpreted.
-* Model Routing responsibilities are not duplicated.
-* Tool execution is not performed inside Tool Router.
-* Tool routing policy is explicit and testable.
-* Tool Routing remains infrastructure independent.
-* Existing 374-test project baseline has no regression.
+* ModelRoute remains the canonical Model Routing output.
+* Prompt remains the canonical Prompt Builder output.
+* Model Routing decisions are not reinterpreted.
+* Runtime model binding ownership is explicit.
+* Model execution ownership is explicit.
+* Provider-specific infrastructure does not leak into frozen routing contracts.
+* Model Execution Integration remains deterministic where policy is deterministic.
+* Existing 447-test project baseline has no regression.
 
+---
 ---
 9.7 Next Architectural Milestones
 
-1. Tool Routing
+1. Model Execution Integration
 
 ↓
 
-2. Model Execution Integration
+2. Tool Execution Integration
 
 ↓
 
@@ -579,15 +619,15 @@ Success Criteria
 Current architectural risks
 
 No critical architectural risks identified.
-
 Current implementation risks
 
-- Tool Router reinterpreting Planner decisions.
-- Duplicating Model Routing responsibilities.
-- Coupling tool selection to tool infrastructure or execution.
-- Introducing nondeterministic tool-routing policy.
-- Mixing tool selection with tool execution.
-- Breaking deterministic upstream contracts.
+- Reinterpreting ModelRoute decisions inside execution integration.
+- Reinterpreting Prompt semantics during model execution integration.
+- Coupling frozen Model Routing contracts to provider-specific model identities.
+- Mixing runtime model resolution with semantic model selection.
+- Mixing model execution with Control Plane orchestration.
+- Introducing hidden fallback or nondeterministic execution policy.
+- Breaking frozen upstream contracts.
 
 Mitigation
 

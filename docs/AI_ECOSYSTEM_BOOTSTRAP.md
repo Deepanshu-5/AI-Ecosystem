@@ -127,7 +127,7 @@ Current Project Status
 
 Overall Progress
 
-Approximately 92%.
+Approximately 95%.
 
 Current Phase
 
@@ -135,15 +135,15 @@ Production V1 Development.
 
 Current Focus
 
-Tool Routing Architecture.
+Model Execution Integration Architecture.
 
 Current Highest Priority
 
-Design the Tool Routing Layer with explicit tool-selection ownership, deterministic routing boundaries, and no duplication of Planner, Model Routing, or tool-execution responsibilities.
+Design Model Execution Integration with explicit semantic model-target to runtime-model binding ownership, infrastructure-independent boundaries, and no duplication of Model Routing or model-execution responsibilities.
 
-Current Major Milestone
+Next Milestone
 
-Model Routing V1 completed, validated, and architecturally frozen.
+Production-ready Model Execution Integration.
 
 Next Milestone
 
@@ -171,6 +171,7 @@ Architecture Complete and Frozen for V1
 * Context Budgeting
 * Prompt Builder
 * Model Routing
+* Tool Routing
 
 Production Ready
 
@@ -180,10 +181,11 @@ Production Ready
 * Context Budgeting
 * Prompt Builder
 * Model Routing
+* Tool Routing
 
 Current Architecture Target
 
-* Tool Routing
+* Model Execution Integration
 
 Deferred
 
@@ -305,20 +307,21 @@ Do not optimize retrieval without new measurements.
 ---
 Current Sprint
 
-Tool Routing Architecture
+Model Execution Integration Architecture
 
 Current Deliverables
 
-* Tool Router architecture design
-* Tool-selection contract definition
-* ExecutionPlan consumption analysis
-* Tool capability representation analysis
-* Deterministic routing policy design
-* Tool Routing ownership boundaries
-* Tool Router validation strategy
-* Tool Router testing and acceptance criteria
+* Model Execution Integration architecture design
+* ModelRoute consumption analysis
+* Semantic ModelTarget to runtime-model binding ownership
+* Runtime model resolution boundary analysis
+* Model execution ownership analysis
+* Provider and infrastructure dependency analysis
+* Execution failure boundary analysis
+* Validation strategy
+* Testing and acceptance criteria
 
-The Planner, Retriever, Retriever Integration, Context Budgeting, Prompt Builder, and Model Routing V1 subsystems have been completed and validated.
+The Planner, Retriever, Retriever Integration, Context Budgeting, Prompt Builder, Model Routing, and Tool Routing V1 subsystems have been completed and validated.
 
 These completed subsystems are considered architecturally frozen. Future changes are limited to bug fixes, documentation corrections, and explicitly approved backward-compatible improvements.
 
@@ -529,6 +532,75 @@ Validation Baseline
 1 external ChromaDB deprecation warning.
 ---
 ---
+Tool Routing Status
+
+The Tool Routing subsystem has been completed and validated.
+
+Completed Components
+
+* ToolCapability
+* ToolRoute
+* ToolRouter
+* ToolRoutingValidator
+* Tool Routing exceptions
+* Deterministic resource-requirement-to-capability routing
+* KNOWLEDGE_ACCESS semantic capability
+* MEMORY_ACCESS semantic capability
+* SESSION_ACCESS semantic capability
+* Exact eight-state routing policy
+* Canonical capability ordering
+* ResourceRequirements boundary validation
+* Requirement-to-capability invariant validation
+* Deterministic routing reasons
+* Stable ToolRoute serialization
+* Planner-to-Tool-Router pipeline validation
+
+Verification
+
+* Planner-to-Tool-Router pipeline: 10 tests passing
+* 134 Routing tests passing
+* Unit tested
+* Validation tested
+* Determinism tested
+* Non-mutation tested
+* Planner cross-layer tested
+* Full project regression tested
+
+Current Status
+
+Production Ready (V1)
+
+The Tool Router consumes ExecutionPlan and produces an immutable deterministic ToolRoute.
+
+ExecutionPlan.resource_requirements is the only V1 capability-selection authority.
+
+The V1 routing policy is:
+
+knowledge=True → KNOWLEDGE_ACCESS
+
+memory=True → MEMORY_ACCESS
+
+session=True → SESSION_ACCESS
+
+All resource requirements false produce an explicit empty capability tuple.
+
+Tool Routing selects semantic information-access capabilities only.
+
+Tool Routing does not inspect raw query text, reinterpret Planner decisions, resolve concrete runtime tools, inspect MCP exposure, or perform tool execution.
+
+Tool Routing and Model Routing are independent parallel decision branches from ExecutionPlan.
+
+Validation Baseline
+
+447 project tests passing.
+
+0 failures.
+
+1 external ChromaDB deprecation warning.
+
+Architecture frozen for V1.
+
+---
 
 AI Collaboration Instructions
 
@@ -566,13 +638,16 @@ A contributor should also be able to:
 * Understand the completed Context Budgeting V1 subsystem.
 * Understand the completed Prompt Builder V1 subsystem.
 * Understand the completed Model Routing V1 subsystem.
+* Understand the completed Tool Routing V1 subsystem.
 * Preserve ExecutionPlan as the Planner control contract.
 * Preserve RetrievedContext as the canonical retrieval output contract.
 * Preserve BudgetedContext as the canonical budgeting output contract.
 * Preserve Prompt as the canonical Prompt Builder output contract.
 * Preserve ModelRoute as the canonical Model Routing output contract.
+* Preserve ToolRoute as the canonical Tool Routing output contract.
 * Preserve Model Routing as a parallel decision branch from ExecutionPlan.
-* Continue development from the Tool Routing milestone without redesigning completed upstream subsystems.
+* Preserve Tool Routing as an independent parallel decision branch from ExecutionPlan.
+* Continue development from the Model Execution Integration milestone without redesigning completed upstream subsystems.
 
 
 This document is the official onboarding entry point for the AI Ecosystem.                             
