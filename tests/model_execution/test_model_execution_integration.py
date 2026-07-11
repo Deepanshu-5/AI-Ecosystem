@@ -40,7 +40,7 @@ def test_execution_forwards_prompt_once_without_mutating_contracts() -> None:
 
 
 def test_runtime_exception_is_translated_to_execution_error() -> None:
-    with pytest.raises(ModelExecutionError, match="Model runtime invocation failed") as error:
+    with pytest.raises(ModelExecutionError, match="Runtime invocation failed during model execution.") as error:
         ModelExecutionIntegration().execute(Prompt(content="prompt"), _route(), _FailingGenerator())
 
     assert isinstance(error.value.__cause__, RuntimeError)
