@@ -28,7 +28,7 @@ Implementation continues according to the established architecture.
 
 Current Engineering Focus
 
-Tool Routing Architecture
+Tool Execution Integration
 
 ---
 
@@ -379,7 +379,7 @@ Validation
 * Planner-to-Tool-Router pipeline: 10 tests passing
 * 134 Routing tests passing
 * Full project regression validation passing
-* 447 project tests passing
+* 460 project tests passing
 * 0 failures
 * 1 external ChromaDB deprecation warning
 
@@ -390,7 +390,34 @@ No planned functional work.
 Future semantic capability-to-runtime tool binding belongs to Tool Execution Integration.
 
 Architecture frozen for V1.
+---
 
+## Model Execution Integration
+
+### Status
+
+Completed
+
+### Validation
+
+- Architecture Review: PASS
+- Implementation Review: PASS
+- Cross-Layer Review: PASS
+- Regression Testing: PASS
+
+### Current Capability
+
+The subsystem consumes the canonical `Prompt` and `ModelRoute` contracts and produces the immutable `ModelResponse` contract.
+
+Execution performs deterministic runtime orchestration without semantic planning, routing, provider selection, or runtime configuration.
+
+### Produced Contract
+
+- ModelResponse
+
+### Architecture Status
+
+Frozen for V1.
 ---
 ---
 
@@ -435,22 +462,34 @@ Progress
 Validated Context and Prompt Path
 
 Planner
-↓
+        ↓
 ExecutionPlan
-↓
+        ├────────► Model Router
+        │              ↓
+        │          ModelRoute
+        │
+        ├────────► Tool Router
+        │              ↓
+        │          ToolRoute
+        │
+        ▼
 Retriever Integration
-↓
+        ↓
 Retriever
-↓
+        ↓
 RetrievedContext
-↓
+        ↓
 Context Budgeting
-↓
+        ↓
 BudgetedContext
-↓
+        ↓
 Prompt Builder
-↓
+        ↓
 Prompt
+        ↓
+Model Execution Integration
+        ↓
+ModelResponse
 
 Validated Model Routing Branch
 
@@ -470,15 +509,11 @@ ToolRoute
 
 Current Focus
 
-Model Execution Integration.
+Tool Execution Integration
 
-Future Focus
+Control Plane orchestration
 
-Tool Execution Integration.
-
-Execution policies.
-
-Control Plane orchestration.
+Legacy runtime migration
 ---
 
 9.3 Current Performance
@@ -524,7 +559,7 @@ Engineering priorities should continue to follow measured bottlenecks rather tha
 
 Priority 1
 
-Design Model Execution Integration.
+Tool Execution Integration
 
 Priority 2
 
@@ -567,16 +602,15 @@ These items are intentionally postponed to preserve focus on Production V1.
 
 Current Sprint
 
-Model Execution Integration Architecture
+Tool Execution Integration Architecture
 
 Primary Deliverables
 
-* Model Execution Integration architecture
-* ModelRoute consumption analysis
-* Prompt consumption analysis
-* Semantic ModelTarget to runtime-model binding ownership
-* Runtime model resolution boundary
-* Model execution ownership boundary
+* Tool Execution Integration architecture
+* ToolRoute consumption analysis
+* Semantic ToolCapability-to-runtime-tool binding ownership
+* Runtime tool resolution boundary
+* Tool execution ownership boundary
 * Provider and infrastructure dependency analysis
 * Execution failure boundary analysis
 * Validation strategy
@@ -586,32 +620,25 @@ Primary Deliverables
 Success Criteria
 
 * Frozen upstream contracts remain unchanged.
-* ModelRoute remains the canonical Model Routing output.
+* ToolRoute remains the canonical Tool Routing output.
 * Prompt remains the canonical Prompt Builder output.
-* Model Routing decisions are not reinterpreted.
-* Runtime model binding ownership is explicit.
-* Model execution ownership is explicit.
+* Tool Routing decisions are not reinterpreted.
+* Runtime tool binding ownership is explicit.
+* Tool execution ownership is explicit.
 * Provider-specific infrastructure does not leak into frozen routing contracts.
-* Model Execution Integration remains deterministic where policy is deterministic.
-* Existing 447-test project baseline has no regression.
+* Tool Execution Integration remains deterministic where policy is deterministic.
+* Existing 460-test project baseline has no regression.
 
 ---
 ---
 9.7 Next Architectural Milestones
 
-1. Model Execution Integration
+1. Tool Execution Integration
 
-↓
+2. Control Plane Integration
 
-2. Tool Execution Integration
+3. Production V1 Completion
 
-↓
-
-3. Control Plane Completion
-
-↓
-
-4. Production V1
 ---
 
 9.8 Risks
@@ -621,11 +648,11 @@ Current architectural risks
 No critical architectural risks identified.
 Current implementation risks
 
-- Reinterpreting ModelRoute decisions inside execution integration.
-- Reinterpreting Prompt semantics during model execution integration.
-- Coupling frozen Model Routing contracts to provider-specific model identities.
-- Mixing runtime model resolution with semantic model selection.
-- Mixing model execution with Control Plane orchestration.
+- Reinterpreting ToolRoute decisions inside execution integration.
+- Reinterpreting ToolCapability semantics during tool execution integration.
+- Coupling frozen Tool Routing contracts to provider-specific tool identities.
+- Mixing runtime tool resolution with semantic capability selection.
+- Mixing tool execution with Control Plane orchestration.
 - Introducing hidden fallback or nondeterministic execution policy.
 - Breaking frozen upstream contracts.
 
@@ -644,7 +671,9 @@ The project is considered successful when:
 - Sessions are persistent.
 - Context is automatically budgeted.
 - Planner is deterministic.
-- Routing is intelligent.
+- Model execution is deterministic.
+- Tool execution is deterministic.
+- Routing is deterministic.
 - Infrastructure remains replaceable.
 - Token usage is significantly reduced.
 - Response quality is preserved or improved.
