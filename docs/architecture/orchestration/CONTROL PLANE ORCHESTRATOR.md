@@ -6,7 +6,7 @@ Orchestrator.
 It specifies architectural responsibilities, boundaries, contracts, and
 constraints.
 
-It does not define implementation details.
+It does not define implementation details.                                                              
 
 # Part 1 — Foundation
 
