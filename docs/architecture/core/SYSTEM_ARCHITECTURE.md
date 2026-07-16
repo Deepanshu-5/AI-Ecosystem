@@ -25,30 +25,41 @@ High-Level Architecture
 User
         │
         ▼
-Intent & Planning Layer
+Planner
+        │
+ExecutionPlan
+        │
+ ├──────────────┐
+ │              │
+ ▼              ▼
+Retriever    Model Router
+     │
+     ▼
+Budgeting
+     │
+     ▼
+Prompt Builder
+     │
+     ▼
+Model Execution Integration
+
+ExecutionPlan
         │
         ▼
-Information Planning
+Tool Router
         │
         ▼
-Knowledge Retrieval
-Memory Retrieval
-Session Retrieval
-        │
-        ▼
-Context Budgeting
-        │
-        ▼
-Prompt Construction
-        │
-        ▼
-Tool Routing
-        │
-        ▼
-Model Routing
-        │
-        ▼
-Language Model
+Tool Execution Integration
+
+Both
+
+↓
+
+Control Plane Orchestrator
+
+↓
+
+ControlPlaneResult
         │
         ▼
 Response
@@ -216,7 +227,7 @@ Responsibilities
 
 The Prompt Builder never performs planning.
 
-It consumes planner output.
+It Consumes the canonical BudgetedContext contract produced by the Context Budgeting subsystem.
 
 ---
 
@@ -249,9 +260,11 @@ Future Responsibilities
 - Latency optimization
 - Fallback strategy
 
-Current Default
+Production V1
 
-qwen2.5:1.5b
+Model Routing selects a semantic model capability.
+
+Concrete provider and model binding are performed by the runtime execution layer.
 
 Future routing may select different models depending on ExecutionPlan complexity.
 
