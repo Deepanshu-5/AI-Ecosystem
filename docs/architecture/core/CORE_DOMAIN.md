@@ -1,3 +1,16 @@
+Version: 1.0
+
+Status: Production Ready
+
+Architecture Status: Frozen
+
+Production Target: Production V1
+
+Current Phase: Production V1 Freeze
+
+Review Requirement:
+Architecture Review Required Before Modification
+
 4. Core Domain
 
 The Core Domain defines the conceptual model of the AI Ecosystem.
@@ -117,11 +130,11 @@ Context exists before budgeting.
 
 ---
 
-Budgeted Context
+BudgetedContext
 
 Context remaining after Context Budgeting.
 
-Budgeted Context is the only context passed to Prompt Construction.
+BudgetedContext is the only context passed to Prompt Construction.
 
 ---
 
@@ -130,6 +143,30 @@ Prompt
 The final structured input delivered to a language model.
 
 Prompt construction occurs after planning and budgeting.
+
+---
+
+Retriever
+
+The architectural component responsible for locating and returning the knowledge, memory, and session information required by the ExecutionPlan. The Retriever never constructs prompts or executes models or tools.
+
+---
+
+Context Budgeting
+
+The subsystem responsible for allocating, prioritizing, and trimming context before prompt construction. Context Budgeting produces BudgetedContext.
+
+---
+
+ModelRoute
+
+The immutable contract produced by the Model Router that declares which model capability should execute the prompt.
+
+---
+
+ToolRoute
+
+The immutable contract produced by the Tool Router that declares which tool capability should execute.
 
 ---
 
@@ -176,7 +213,7 @@ Does not own:
 
 ---
 
-Budgeter
+Context Budgeting
 
 Owns:
 
@@ -241,8 +278,10 @@ Communication between architectural layers occurs only through immutable domain 
 Current contracts include:
 
 - ExecutionPlan
-- Budgeted Context
+- BudgetedContext
 - Prompt
+- ModelRoute
+- ToolRoute
 
 Future contracts should follow the same philosophy.
 
@@ -332,10 +371,13 @@ Identical inputs should produce identical domain outputs whenever possible.
 
 Domain Object| Owner| Primary Consumers
 Planner| Planning Layer| ExecutionPlan Builder
-ExecutionPlan| Planner| Budgeter, Prompt Builder, Routers
+ExecutionPlan| Planner| Context Budgeting, Prompt Builder, Routers
 DecisionTrace| Planner| Observability, Debugging
-Budgeted Context| Budgeter| Prompt Builder
+Retriever| Retrieval Layer| Context Budgeting
+BudgetedContext| Context Budgeting| Prompt Builder
 Prompt| Prompt Builder| Model Router
+ModelRoute| Model Router| Execution Layer
+ToolRoute| Tool Router| Execution Layer
 Model Selection| Model Router| Execution Layer
 Tool Selection| Tool Router| Execution Layer
 
