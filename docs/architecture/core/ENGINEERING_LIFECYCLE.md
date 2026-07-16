@@ -1,3 +1,16 @@
+Version: 1.0
+
+Status: Production Ready
+
+Architecture Status: Frozen
+
+Production Target: Production V1
+
+Current Phase: Production V1 Freeze
+
+Review Requirement:
+Architecture Review Required Before Modification
+
 6. Engineering Lifecycle
 
 The AI Ecosystem follows a structured engineering lifecycle designed to preserve architectural integrity while enabling continuous evolution.
@@ -281,6 +294,13 @@ Implementation is not complete until all reviews pass.
 6.9 Testing Philosophy
 
 Testing verifies architectural behaviour rather than implementation details.
+
+The testing program must explicitly include:
+- Unit Testing: isolated, infrastructure-free tests validating domain behaviour (unit tests are executed first).
+- Integration Testing: tests validating compatibility and behaviour across module boundaries and with integration review targets.
+- Regression Testing: automated regression suites that verify previously validated behaviours remain intact after changes.
+
+Documentation review (completeness and accuracy) is also a required validation step before merge.
 
 Every Core Domain component should support isolated testing.
 
