@@ -278,6 +278,7 @@ Communication between architectural layers occurs only through immutable domain 
 Current contracts include:
 
 - ExecutionPlan
+- RetrievedContext
 - BudgetedContext
 - Prompt
 - ModelRoute
