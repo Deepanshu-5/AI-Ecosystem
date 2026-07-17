@@ -1,3 +1,18 @@
+Version: 1.0
+
+Status: Production Ready
+
+Architecture Status: Frozen
+
+Production Target: Production V1
+
+Current Phase: Production V1 Freeze
+
+Review Requirement:
+Architecture Review Required Before Modification
+
+---
+
 # PLANNER.md
 
 ## Overview
@@ -298,6 +313,41 @@ Requested for persistent user information.
 Session
 
 Requested for previous conversation context.
+
+---
+
+# AI Implementation Instructions
+
+This section is directed at AI assistants and future maintainers.
+
+## Frozen Components
+
+The following are **frozen for Production V1** and must never be modified without explicit architecture review:
+
+- **ExecutionPlan contract:** Immutable, single public output of the Planner. Any field addition, removal, or rename requires architecture review.
+- **ProcessingGoal values:** GENERAL, KNOWLEDGE, MEMORY, SESSION, DOCUMENT, CODE. Do not add, remove, or rename values without architecture review.
+- **Complexity values:** LOW, MEDIUM, HIGH. Do not modify without architecture review.
+- **ResourceRequirements structure:** (knowledge, memory, session) boolean fields. Do not modify without architecture review.
+- **DecisionTrace ownership:** Always owned by Planner. Never transfer to downstream components.
+- **Planner non-responsibilities:** The Planner never retrieves, budgets context, constructs prompts, routes tools, routes models, or executes work. This boundary is absolute.
+- **Dependency direction:** Planner depends on nothing. Planner is the root of the Control Plane. Do not introduce dependencies upward or to peer systems.
+
+## Permitted Changes
+
+- **Bug fixes:** Repair incorrect behavior within frozen contracts.
+- **Documentation improvements:** Clarify existing design without changing architecture.
+- **Backward-compatible refinements:** Optimize implementation without changing public contracts or behavior.
+- **Test additions:** Expand test coverage without modifying domain logic.
+
+## Prohibited Changes
+
+- **Do not redesign the Planner:** Only bug fixes and backward-compatible improvements are allowed.
+- **Do not introduce new Planner responsibilities:** New capabilities must be designed as separate subsystems.
+- **Do not modify public contracts:** ExecutionPlan, ProcessingGoal, Complexity, ResourceRequirements, and DecisionTrace are immutable.
+- **Do not add infrastructure dependencies:** The Planner must remain deterministic, testable, and infrastructure-independent.
+- **Do not introduce speculative features:** Only implement Production V1 requirements.
+
+If a change requires breaking the frozen architecture, stop and raise a formal Architecture Question instead of silently modifying the design.
 
 ---
 
