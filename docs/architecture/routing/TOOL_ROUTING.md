@@ -1,12 +1,23 @@
+Version: 1.0
+
+Status: Production Ready
+
+Architecture Status: Frozen
+
+Production Target: Production V1
+
+Current Phase: Production V1 Freeze
+
+Review Requirement:
+Architecture Review Required Before Modification
+
+---
+
 # Tool Routing V1 Architecture
 
-Version: 1.0\
-Status: Production Ready — Architecture Frozen for V1\
-Scope: Tool Routing Subsystem\
-Target Release: AI Ecosystem V0.7.0\
-Validated Project Baseline: 447 passed, 0 failures, 1 external ChromaDB
-deprecation warning
-------------------------------------------------------------------------
+AI Implementation Notice:
+Implementations must follow ENGINEERING_CONSTITUTION.md and IMPLEMENTATION_SPEC.md. Preserve Tool Routing ownership, immutable public contracts (ExecutionPlan, ToolRoute), and dependency direction. Do not duplicate governance or implementation rules; reference the authoritative documents listed above.
+
 
 # 1. Purpose
 

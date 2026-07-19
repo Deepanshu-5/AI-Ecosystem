@@ -1,11 +1,23 @@
+Version: 1.0
+
+Status: Production Ready
+
+Architecture Status: Frozen
+
+Production Target: Production V1
+
+Current Phase: Production V1 Freeze
+
+Review Requirement:
+Architecture Review Required Before Modification
+
+---
+
 # Model Routing V1 Architecture
 
-Version: 1.0\
-Status: Architecture Frozen\
-Scope: Model Routing Subsystem\
-Target Release: AI Ecosystem V0.6.0
+AI Implementation Notice:
+Implementations must follow ENGINEERING_CONSTITUTION.md and IMPLEMENTATION_SPEC.md. Preserve Model Routing ownership, immutable public contracts (ExecutionPlan, ModelRoute), and dependency direction. Do not duplicate governance or implementation rules; reference the authoritative documents listed above.
 
-------------------------------------------------------------------------
 
 # 1. Purpose
 
