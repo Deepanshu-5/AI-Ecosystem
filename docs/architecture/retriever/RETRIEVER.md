@@ -16,7 +16,6 @@ Architecture Review Required Before Modification
 ---
 
 # Overview
-
 The Retriever is the information acquisition subsystem of the AI Ecosystem Control Plane.
 
 Its responsibility is to retrieve only the information explicitly requested by an immutable ExecutionPlan and assemble that information into a deterministic RetrievedContext for downstream processing.
