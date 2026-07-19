@@ -1,9 +1,23 @@
 # TOOL EXECUTION INTEGRATION
 
-Version: 0.9.0
-Status: Architecture Under Review
+Version: 1.0
+
+Status: Production Ready
+
+Architecture Status: Frozen
+
+Production Target: Production V1
+
+Current Phase: Production V1 Freeze
+
+Review Requirement:
+Architecture Review Required Before Modification
+
 Subsystem: Tool Execution Integration
 Project: AI Ecosystem
+
+AI Implementation Notice:
+Implementations must follow ENGINEERING_CONSTITUTION.md and IMPLEMENTATION_SPEC.md. Preserve Tool Execution Integration ownership, immutable public contracts (ToolRoute, ToolExecutionResult), and dependency direction. Do not duplicate governance or implementation rules; reference the authoritative documents listed above.
 
 ---
 
@@ -240,6 +254,8 @@ ToolExecutionResult
 
 This is the canonical output contract of the subsystem.
 
+`ToolExecutionResult` is the public output consumed by the Control Plane Orchestrator.
+
 It represents the completed execution of the requested semantic
 capabilities.
 
@@ -278,6 +294,8 @@ It must not expose runtime implementation details.
 Each executed capability produces exactly one ToolResult.
 
 Conceptually:
+
+`ToolResult` is an implementation-local execution detail and should not be treated as a new public architectural contract in V1.
 
 ```text
 ToolResult

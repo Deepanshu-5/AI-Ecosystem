@@ -6,27 +6,25 @@ Orchestrator.
 It specifies architectural responsibilities, boundaries, contracts, and
 constraints.
 
-It does not define implementation details.                                                              
+It does not define implementation details.
 
 # Part 1 — Foundation
 
-## Version
+Version: 1.0
 
-```text
-1.0.0
-```
+Status: Production Ready
 
----
+Architecture Status: Frozen
 
-## Status
+Production Target: Production V1
 
-```text
-Architecture Draft
-```
+Current Phase: Production V1 Freeze
 
-The architecture is not frozen.
+Review Requirement:
+Architecture Review Required Before Modification
 
-Implementation must not begin until the complete architecture has been reviewed and explicitly approved.
+AI Implementation Notice:
+Implementations must follow ENGINEERING_CONSTITUTION.md and IMPLEMENTATION_SPEC.md. Preserve Control Plane Orchestrator ownership, immutable public contracts (ControlPlaneResult), and dependency direction. Do not duplicate governance or implementation rules; reference the authoritative documents listed above.
 
 ---
 
@@ -52,6 +50,8 @@ It is not:
 # Mission Validation
 
 The AI Ecosystem Control Plane contains multiple validated subsystems with independent responsibilities.
+
+The Control Plane Orchestrator coordinates completed subsystem outputs and never performs business decisions.
 
 These responsibilities include:
 
@@ -261,6 +261,8 @@ Infrastructure
 Control Plane Orchestrator composes subsystem interaction.
 
 It never composes subsystem implementation.
+
+It coordinates completed subsystem outputs and preserves the existing subsystem ownership boundaries.
 
 ---
 
