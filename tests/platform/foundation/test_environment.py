@@ -98,7 +98,9 @@ class TestEnvironmentProviderDetection:
         assert provider.environment == Environment.PRODUCTION
 
     def test_test_detection_via_pytest(self, monkeypatch):
-        monkeypatch.setenv("PYTEST_CURRENT_TEST", "test_environment.py::test_test_detection_via_pytest")
+        monkeypatch.setenv(
+            "PYTEST_CURRENT_TEST", "test_environment.py::test_test_detection_via_pytest"
+        )
         provider = EnvironmentProvider()
         assert provider.environment == Environment.TEST
 
@@ -123,4 +125,3 @@ class TestEnvironmentProviderDetection:
         assert provider.environment == Environment.DEVELOPMENT
         # Prove it's still development (immutable behavior)
         assert not provider.is_production
-

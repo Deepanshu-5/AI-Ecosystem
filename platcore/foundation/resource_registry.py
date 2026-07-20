@@ -12,7 +12,7 @@ internal services managed by DI.
 from __future__ import annotations
 
 import threading
-from dataclasses import dataclass, field,replace
+from dataclasses import dataclass, field, replace
 from enum import Enum, auto
 from typing import Any, Final
 
@@ -147,11 +147,9 @@ class ResourceRegistry:
                 description=description,
                 tags=dict(tags) if tags is not None else {},
                 connection_details=(
-                 dict(connection_details)
-                    if connection_details is not None
-                    else {}
+                    dict(connection_details) if connection_details is not None else {}
                 ),
-            )            
+            )
 
     def unregister(self, name: str) -> None:
         """
@@ -203,7 +201,8 @@ class ResourceRegistry:
             self._resources[name] = replace(
                 self._resources[name],
                 status=status,
-        )
+            )
+
     def get_all(self) -> dict[str, ResourceMetadata]:
         """
         Get a snapshot of all registered resources.

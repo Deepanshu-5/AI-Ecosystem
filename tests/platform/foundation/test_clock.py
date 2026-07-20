@@ -87,4 +87,3 @@ class TestFrozenClock:
         fixed = datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
         clock = FrozenClock(fixed)
         assert clock.now() is clock.now()  # Same object reference (Final)
-

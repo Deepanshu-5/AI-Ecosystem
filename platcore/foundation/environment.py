@@ -116,7 +116,9 @@ class EnvironmentProvider:
             The detected ``Environment`` enum value.
         """
         # Check for explicit environment variable override
-        env_var = os.environ.get("PLATFORM_ENVIRONMENT") or os.environ.get("ENVIRONMENT")
+        env_var = os.environ.get("PLATFORM_ENVIRONMENT") or os.environ.get(
+            "ENVIRONMENT"
+        )
         if env_var is not None:
             normalized = env_var.strip().lower()
             for env in Environment:
@@ -133,4 +135,3 @@ class EnvironmentProvider:
 
         # Default
         return Environment.DEVELOPMENT
-

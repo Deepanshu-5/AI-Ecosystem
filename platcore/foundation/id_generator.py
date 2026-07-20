@@ -49,4 +49,3 @@ class UuidGenerator(IdGenerator):
 
     def generate(self) -> str:
         return str(uuid.uuid4())
-

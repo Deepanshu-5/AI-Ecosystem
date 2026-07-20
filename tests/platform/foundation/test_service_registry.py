@@ -140,7 +140,9 @@ class TestServiceRegistryThreadSafety:
             except Exception as e:
                 errors.append(e)
 
-        threads = [threading.Thread(target=register_service, args=(i,)) for i in range(50)]
+        threads = [
+            threading.Thread(target=register_service, args=(i,)) for i in range(50)
+        ]
         for t in threads:
             t.start()
         for t in threads:
@@ -148,4 +150,3 @@ class TestServiceRegistryThreadSafety:
 
         assert len(errors) == 0
         assert registry.count == 50
-

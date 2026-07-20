@@ -24,13 +24,19 @@ class TestLifecycleState:
         assert LifecycleState.CREATED.value == 1  # auto() starts at 1
 
     def test_can_transition_to_valid(self):
-        assert LifecycleState.CREATED.can_transition_to(LifecycleState.INITIALIZING) is True
+        assert (
+            LifecycleState.CREATED.can_transition_to(LifecycleState.INITIALIZING)
+            is True
+        )
 
     def test_cannot_transition_to_invalid(self):
         assert LifecycleState.CREATED.can_transition_to(LifecycleState.STARTED) is False
 
     def test_cannot_transition_backwards(self):
-        assert LifecycleState.INITIALIZED.can_transition_to(LifecycleState.CREATED) is False
+        assert (
+            LifecycleState.INITIALIZED.can_transition_to(LifecycleState.CREATED)
+            is False
+        )
 
     def test_stopped_cannot_transition(self):
         assert LifecycleState.STOPPED.can_transition_to(LifecycleState.CREATED) is False
@@ -98,7 +104,9 @@ class TestLifecycleManagerCallbacks:
         self.callback_log.append(state)
 
     def test_callback_invoked_on_transition(self):
-        self.manager.register_callback(LifecycleState.INITIALIZING, self._record_callback)
+        self.manager.register_callback(
+            LifecycleState.INITIALIZING, self._record_callback
+        )
         self.manager.transition_to(LifecycleState.INITIALIZING)
         assert self.callback_log == [LifecycleState.INITIALIZING]
 
@@ -132,7 +140,9 @@ class TestLifecycleManagerCallbacks:
             raise ValueError("callback failure")
 
         self.manager.register_callback(LifecycleState.INITIALIZING, failing_callback)
-        with pytest.raises(InvalidLifecycleStateError, match="Lifecycle callback failed"):
+        with pytest.raises(
+            InvalidLifecycleStateError, match="Lifecycle callback failed"
+        ):
             self.manager.transition_to(LifecycleState.INITIALIZING)
         assert self.manager.state == LifecycleState.FAILED
 
@@ -224,4 +234,3 @@ class TestLifecycleManagerThreadSafety:
         for t in threads:
             t.join()
         assert len(errors) == 0
-

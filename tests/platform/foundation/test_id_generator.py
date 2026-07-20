@@ -55,4 +55,3 @@ class TestUuidGenerator:
         assert len(parts[2]) == 4
         assert len(parts[3]) == 4
         assert len(parts[4]) == 12
-

@@ -69,4 +69,3 @@ class TestPlatformFoundationExceptions:
         ]:
             exc = exc_cls("message")
             assert str(exc) == "message"
-

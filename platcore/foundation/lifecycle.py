@@ -83,8 +83,7 @@ class LifecycleCallback(Protocol):
     performs work during a lifecycle phase transition.
     """
 
-    def __call__(self, state: LifecycleState) -> None:
-        ...
+    def __call__(self, state: LifecycleState) -> None: ...
 
 
 class LifecycleManager:
@@ -129,7 +128,9 @@ class LifecycleManager:
         with self._lock:
             return self._state
 
-    def register_callback(self, state: LifecycleState, callback: LifecycleCallback) -> None:
+    def register_callback(
+        self, state: LifecycleState, callback: LifecycleCallback
+    ) -> None:
         """
         Register a callback to be invoked when the given state is entered.
 
@@ -217,4 +218,3 @@ class LifecycleManager:
                 raise InvalidLifecycleStateError(
                     f"Lifecycle callback failed at state {state}: {exc}"
                 ) from exc
-

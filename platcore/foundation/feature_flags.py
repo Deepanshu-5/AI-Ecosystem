@@ -109,4 +109,3 @@ class InMemoryFeatureFlagProvider(FeatureFlagProvider):
         """
         with self._lock:
             self._flags.pop(flag_name, None)
-

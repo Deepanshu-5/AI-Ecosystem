@@ -112,4 +112,3 @@ class TestInMemoryFeatureFlagProviderThreadSafety:
         # Verify no corruption
         for i in range(100):
             assert provider.is_enabled(f"flag_{i}") is True
-

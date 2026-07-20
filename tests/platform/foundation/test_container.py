@@ -32,6 +32,7 @@ class _Logger(ABC):
     @abstractmethod
     def log(self, message: str) -> None: ...
 
+
 class _ConsoleLogger(_Logger):
     def __init__(self, prefix: str = "[LOG]") -> None:
         self.prefix = prefix
@@ -39,22 +40,27 @@ class _ConsoleLogger(_Logger):
     def log(self, message: str) -> None:
         pass  # No-op for testing
 
+
 class _Database:
     def __init__(self, connection_string: str = "default") -> None:
         self.connection_string = connection_string
+
 
 class _ServiceA:
     def __init__(self, logger: _Logger, clock: Clock) -> None:
         self.logger = logger
         self.clock = clock
 
+
 class _ServiceB:
     def __init__(self, service_a: _ServiceA) -> None:
         self.service_a = service_a
 
+
 class _CircularA:
     def __init__(self, b: "_CircularB") -> None:
         self.b = b
+
 
 class _CircularB:
     def __init__(self, a: _CircularA) -> None:
@@ -65,6 +71,7 @@ class _CircularB:
 class _DirectCircularA:
     def __init__(self, b: "_DirectCircularB") -> None:
         self.b = b  # type: ignore
+
 
 class _DirectCircularB:
     def __init__(self, a: "_DirectCircularA") -> None:
@@ -206,11 +213,12 @@ class TestServiceContainerParent:
         parent = ServiceContainer()
         parent.register(_Logger, _ConsoleLogger)
         child = ServiceContainer(parent=parent)
+
         class _OtherLogger(_Logger):
             def log(self, message: str) -> None: ...
+
         child.register(_Logger, _OtherLogger, override=True)
         parent_logger = parent.resolve(_Logger)
         child_logger = child.resolve(_Logger)
         assert isinstance(parent_logger, _ConsoleLogger)
         assert isinstance(child_logger, _OtherLogger)
-

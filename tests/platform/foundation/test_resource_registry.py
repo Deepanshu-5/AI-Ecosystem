@@ -149,7 +149,9 @@ class TestResourceRegistryThreadSafety:
             except Exception as e:
                 errors.append(e)
 
-        threads = [threading.Thread(target=register_resource, args=(i,)) for i in range(50)]
+        threads = [
+            threading.Thread(target=register_resource, args=(i,)) for i in range(50)
+        ]
         for t in threads:
             t.start()
         for t in threads:
@@ -157,4 +159,3 @@ class TestResourceRegistryThreadSafety:
 
         assert len(errors) == 0
         assert registry.count == 50
-

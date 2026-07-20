@@ -280,4 +280,3 @@ class ServiceContainer:
                 kwargs[param_name] = self.resolve(param_type)
 
         return cls(**kwargs)
-

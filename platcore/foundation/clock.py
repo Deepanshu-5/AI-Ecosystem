@@ -114,4 +114,3 @@ class FrozenClock(Clock):
 
     def timestamp(self) -> float:
         return self._frozen.timestamp()
-

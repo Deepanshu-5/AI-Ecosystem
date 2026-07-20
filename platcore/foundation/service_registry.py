@@ -118,7 +118,7 @@ class ServiceRegistry:
                 service_type=service_type,
                 version=version,
                 tags=dict(tags) if tags is not None else {},
-            )            
+            )
 
     def unregister(self, name: str) -> None:
         """
@@ -168,9 +168,10 @@ class ServiceRegistry:
             if name not in self._services:
                 raise ServiceNotFoundError(f"Service '{name}' not found in registry")
             self._services[name] = replace(
-            self._services[name],
-            status=status,
-        )
+                self._services[name],
+                status=status,
+            )
+
     def get_all(self) -> dict[str, ServiceMetadata]:
         """
         Get a snapshot of all registered services.
